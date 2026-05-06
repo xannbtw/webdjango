@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+:root {
+    --background: #FAF6F1 ;
+    --foreground: #3B2D24;
+    --card: #FFF9F5;
+    --primary: #C8887A;
+    --primary-foreground: #FFF9F5;
+    --secondary: #EAD8CB;
+    --secondary-foreground: #3B2D24;
+    --muted: #F2E8DE;
+    --muted-foreground: #8A6F62;
+    --accent: #A8C3A4;
+    --accent-foreground: #2B3D28;
+    --border: rgba(160,120,96,0.2);
+}
+
+body {
+    background-color: var(--background);
+}
+
+.custom-navbar {
+    background-color: var(--background);
+    padding: 1.2rem 0;
+}
+
+.brand-text {
+    font-family: 'Oswald';
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--foreground);
+    letter-spacing: 0.5px;
+}
+
+.brand-icon {
+    font-size: 1.4rem;
+    color: var(--primary); 
+}
+
+.custom-navbar .navbar-nav .nav-link {
+    color: var(--foreground);
+    margin: 0 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+
+.custom-navbar .navbar-nav .nav-link.active,
+.custom-navbar .navbar-nav .nav-link:hover {
+    color: var(--primary);
+}
+
+.nav-icons .nav-link {
+    color: var(--foreground);
+    font-size: 1.3rem;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+
+.nav-icons .nav-link:hover {
+    color: var(--primary);
+}
+
+
+.custom-navbar .navbar-toggler:focus {
+    box-shadow: none;
+}

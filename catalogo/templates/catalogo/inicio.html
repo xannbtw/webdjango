@@ -1,0 +1,31 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}Catálogo - Cafetería{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">Nuestro Menú</h2>
+
+<div class="row">
+    <!-- Recorremos los productos que envía views.py -->
+    {% for producto in productos %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <!-- Aquí luego pondremos la imagen real del producto -->
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2">{{ producto.categoria }}</span>
+                    <h5 class="card-title">{{ producto.nombre }}</h5>
+                    <p class="card-text text-muted">{{ producto.descripcion|truncatewords:10 }}</p>
+                    <h4 class="text-success">${{ producto.precio }}</h4>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <button class="btn btn-primary w-100">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning text-center">No hay productos disponibles en este momento.</div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}
