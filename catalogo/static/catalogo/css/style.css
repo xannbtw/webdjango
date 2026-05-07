@@ -66,3 +66,37 @@ body {
 .custom-navbar .navbar-toggler:focus {
     box-shadow: none;
 }
+
+.hero {
+    position: relative;
+    width: 100%;
+    background-image: url('https://images.pexels.com/photos/296888/pexels-photo-296888.jpeg?auto=compress&cs=tinysrgb&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(44, 44, 44, 0.5);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: var(--muted);
+    padding: 2rem;
+}
+
+.btn {
+    border: solid var(--primary);
+}
+
+.btn:hover {
+    border: solid var(--primary);
+    background-color: var(--primary);
+}

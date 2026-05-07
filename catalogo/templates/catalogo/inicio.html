@@ -3,29 +3,57 @@
 {% block title %}Catálogo - Cafetería{% endblock %}
 
 {% block content %}
-<h2 class="text-center mb-4">Nuestro Menú</h2>
 
-<div class="row">
-    <!-- Recorremos los productos que envía views.py -->
-    {% for producto in productos %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <!-- Aquí luego pondremos la imagen real del producto -->
-                <div class="card-body">
-                    <span class="badge bg-secondary mb-2">{{ producto.categoria }}</span>
-                    <h5 class="card-title">{{ producto.nombre }}</h5>
-                    <p class="card-text text-muted">{{ producto.descripcion|truncatewords:10 }}</p>
-                    <h4 class="text-success">${{ producto.precio }}</h4>
-                </div>
-                <div class="card-footer bg-transparent border-top-0">
-                    <button class="btn btn-primary w-100">Añadir al carrito</button>
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-2 fw-bold mb-3 font-playfair">Nomade Café</h1>
+                <p class="lead mb-4 fs-4 fw-light">Tu refugio de especialidad en el corazón de Chiguayante. Tómate un momento, disfruta el viaje.</p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                    <a href="#menu" class="btn btn-primary-custom btn-lg rounded-pill px-5 shadow-sm">Ver Menú</a>
+                    <a href="#nosotros" class="btn btn-outline-light btn-lg rounded-pill px-4">Conócenos</a>
                 </div>
             </div>
         </div>
-    {% empty %}
-        <div class="col-12">
-            <div class="alert alert-warning text-center">No hay productos disponibles en este momento.</div>
+    </div>
+</section>
+
+
+<section id="menu" class="py-5" style="background-color: var(--muted);">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold letter-spacing-1" style="color: var(--muted-foreground); letter-spacing: 2px; font-size: 0.85rem;">Clásicos</span>
+            <h2 class="display-5 mt-2 font-playfair">Nuestra Selección</h2>
         </div>
-    {% endfor %}
-</div>
+        
+        <div class="row g-4">
+            {% for producto in productos %}
+            <div class="col-md-4">
+                <div class="card product-card h-100 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1680381724318-c8ac9fe3a484?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzcGVjaWFsdHklMjBjb2ZmZWUlMjBsYXR0ZSUyMGFydHxlbnwxfHx8fDE3NzgxMDYxMDR8MA&ixlib=rb-4.1.0&q=80&w=1080" class="card-img-top" alt="{{ producto.nombre }}">
+                    
+                    <div class="card-body p-4 text-center">
+                        <h4 class="card-title font-playfair mb-2">{{ producto.nombre }}</h4>
+                        <p class="card-text text-muted small mb-3">{{ producto.descripcion|truncatewords:15 }}</p>
+                        <h5 class="fw-bold mb-3" style="color: var(--primary);">${{ producto.precio }}</h5>
+                        
+                        <form action="#" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ producto.id }}">
+                            <button type="submit" class="btn btn-outline-dark rounded-pill w-100">Agregar al Carrito</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No hay productos en el catálogo por ahora.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
 {% endblock content %}
