@@ -10,3 +10,6 @@ def catalogo_view(request):
     }
     
     return render(request, 'catalogo/inicio.html', contexto)
+
+def nosotros_view(request): 
+    return render(request, 'catalogo/nosotros.html')

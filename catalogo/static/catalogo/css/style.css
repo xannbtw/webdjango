@@ -70,7 +70,7 @@ body {
 .hero {
     position: relative;
     width: 100%;
-    background-image: url('https://images.pexels.com/photos/296888/pexels-photo-296888.jpeg?auto=compress&cs=tinysrgb&w=1920&q=80');
+    background-image: url('https://images.unsplash.com/photo-1739723745132-97df9db49db2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3p5JTIwY2FmZSUyMGludGVyaW9yfGVufDF8fHx8MTc3Nzk4MTI0MXww&ixlib=rb-4.1.0&q=80&w=1080');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -89,14 +89,39 @@ body {
     z-index: 1;
     text-align: center;
     color: var(--muted);
-    padding: 2rem;
+    padding: 15rem;
 }
 
 .btn {
+    color: #fff;
+    background-color: var(--primary);
     border: solid var(--primary);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn:hover {
-    border: solid var(--primary);
-    background-color: var(--primary);
+    color: #fff;
+    border: solid #9c6c61;
+    transform: translateY(-5px);
+    background-color: #9c6c61;
+}
+
+
+.product-card {
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.product-card img {
+    height: 250px;
+    width: 100%;
+    object-fit: cover;
 }
