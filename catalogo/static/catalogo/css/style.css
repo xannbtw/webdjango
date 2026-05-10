@@ -62,9 +62,12 @@ body {
     color: var(--primary);
 }
 
-
 .custom-navbar .navbar-toggler:focus {
     box-shadow: none;
+}
+
+#navbarNomade:hover {
+    
 }
 
 .hero {
