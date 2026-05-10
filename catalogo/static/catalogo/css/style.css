@@ -76,20 +76,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 85vh;
 }
 
 .hero-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     background-color: rgba(44, 44, 44, 0.5);
+    z-index: 0;
 }
 
 .hero-content {
     position: relative;
     z-index: 1;
-    text-align: center;
-    color: var(--muted);
-    padding: 15rem;
 }
 
 .btn {

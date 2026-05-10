@@ -6,17 +6,23 @@
 
 <section class="hero">
     <div class="hero-overlay"></div>
-    <div class="container hero-content">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h1 class="display-2 fw-bold mb-3 font-playfair">Nomade Café</h1>
-                <p class="lead mb-4 fs-4 fw-light">Tu refugio de especialidad en el corazón de Chiguayante. Tómate un momento, disfruta el viaje.</p>
-                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                    <a href="{% url 'menu' %}" class="btn btn-primary-custom btn-lg rounded-pill px-5 shadow-sm">Ver Menú</a>
-                    <a href="{% url 'nosotros' %}" class="btn btn-outline-light btn-lg rounded-pill px-4">Conócenos</a>
+    
+    <div class="container-fluid hero-content text-center px-0">
+        
+        <div class="row justify-content-center w-100 mx-0">
+            <div class="col-12 col-md-10 col-lg-8 px-4">
+                
+                <h1 class="display-4 fw-bold mb-3 font-playfair text-white">Nomade Café</h1>
+                <p class="lead mb-4 fw-light text-white">Tu refugio de especialidad en el corazón de Chiguayante. Tómate un momento, disfruta el viaje.</p>
+                
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-4">
+                    <a href="{% url 'menu' %}" class="btn btn-primary-custom btn-lg rounded-pill shadow-sm w-100 text-nowrap">Ver Menú</a>
+                    <a href="{% url 'nosotros' %}" class="btn btn-outline-light btn-lg rounded-pill w-100 text-nowrap">Conócenos</a>
                 </div>
+                
             </div>
         </div>
+        
     </div>
 </section>
 
