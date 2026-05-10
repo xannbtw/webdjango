@@ -130,26 +130,26 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DEBUG = False
+# --- CONFIGURACIÓN DE PRODUCCIÓN (LIMPIA) ---
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'YTB_XD')
+# 1. Seguridad
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ob(qfz#v(1&%bm^=j!o6+^6n(nf^2jk23e!!c5cu)xkf+i!=5p')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-
 ALLOWED_HOSTS = ['*']
+
+# 2. Archivos Estáticos (CSS, JS)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# (No necesitamos STATICFILES_DIRS porque al estar 'catalogo' en INSTALLED_APPS, Django lo busca automático)
+
+# 3. Archivos Multimedia (Imágenes en Cloudinary)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dwpxitcur',
     'API_KEY': '969848981519465',
     'API_SECRET': 'eNF-vfmYwovW8HfISQFoAa28tbQ'
 }
-# Guarda /media/ en Cloudinary
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
