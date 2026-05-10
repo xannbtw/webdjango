@@ -6,12 +6,11 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- 1. SEGURIDAD ---
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ob(qfz#v(1&%bm^=j!o6+^6n(nf^2jk23e!!c5cu)xkf+i!=5p')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['*']
 
-# --- 2. APLICACIONES INSTALADAS ---
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,10 +23,10 @@ INSTALLED_APPS = [
     'catalogo',
 ]
 
-# --- 3. MIDDLEWARE ---
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # WhiteNoise interceptará el CSS aquí
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -69,20 +68,19 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Ajustado a horario local para mejor precisión
+
 LANGUAGE_CODE = 'es-cl'
 TIME_ZONE = 'America/Santiago'
 USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# --- 4. ARCHIVOS ESTÁTICOS (CSS, JS) ---
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-# Eliminamos STATICFILES_DIRS para anular el conflicto de archivos duplicados
 
-# --- 5. ARCHIVOS MULTIMEDIA (CLOUDINARY) ---
+
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {
