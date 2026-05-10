@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
     'catalogo',
 ]
 
@@ -141,3 +143,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'YTB_XD')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dwpxitcur',
+    'API_KEY': '969848981519465',
+    'API_SECRET': 'eNF-vfmYwovW8HfISQFoAa28tbQ'
+}
+# Guarda /media/ en Cloudinary
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
