@@ -130,8 +130,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# --- CONFIGURACIÓN DE PRODUCCIÓN (LIMPIA) ---
-
 # 1. Seguridad
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ob(qfz#v(1&%bm^=j!o6+^6n(nf^2jk23e!!c5cu)xkf+i!=5p')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
@@ -141,7 +139,6 @@ ALLOWED_HOSTS = ['*']
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-# (No necesitamos STATICFILES_DIRS porque al estar 'catalogo' en INSTALLED_APPS, Django lo busca automático)
 
 # 3. Archivos Multimedia (Imágenes en Cloudinary)
 MEDIA_URL = '/media/'
