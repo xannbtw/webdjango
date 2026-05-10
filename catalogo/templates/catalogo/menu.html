@@ -1,0 +1,26 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}Menu - Cafetería{% endblock %}
+
+{% block content%}
+
+<h2 class="text-center font-playfair my-5">Explora nuestro Menú</h2>
+<div class="container mx-auto">
+    <div class="row gx-4 gy-5 justify-content-center">
+        {% for cat in categorias %}
+        <div class="col-md-4 col-sm-6">
+            <a href="{% url 'filtro_categoria' cat.id %}" class="text-decoration-none">
+                <div class="card product-card shadow-sm h-100 mx-auto" style='max-width: 320px;'>
+                    {% if cat.image %}
+                        <img src="{{ cat.image.url }}" class="card-img-top" alt="{{ cat.nombre }}">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h3 class="font-playfair text-dark">{{ cat.nombre }}</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content%}

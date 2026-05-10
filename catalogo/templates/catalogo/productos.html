@@ -1,0 +1,51 @@
+{% extends 'catalogo/base.html' %}
+
+{% block content %}
+
+<div class="container py-5 mt-4">
+    
+    <a href="{% url 'menu' %}" class="text-decoration-none text-muted mb-4 d-inline-block">
+        <i class="bi bi-arrow-left me-1"></i> Volver a Categorías
+    </a>
+
+    <div class="text-center mb-5">
+        <span class="text-uppercase fw-bold letter-spacing-1" style="color: var(--muted-foreground); letter-spacing: 2px; font-size: 0.85rem;">Explorando</span>
+        <h2 class="display-4 mt-2 font-playfair">{{ categoria.nombre }}</h2>
+    </div>
+
+    <div class="row g-4">
+        {% for producto in productos %}
+        <div class="col-md-4">
+            <div class="card product-card h-100 shadow-sm">
+                
+                {% if producto.image %}
+                    <img src="{{ producto.image.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                {% else %}
+                    <img src="https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=800" class="card-img-top" alt="">
+                {% endif %}
+                
+                <div class="card-body p-4 text-center">
+                    <h4 class="card-title font-playfair mb-2">{{ producto.nombre }}</h4>
+                    <p class="card-text text-muted small mb-3">{{ producto.descripcion|truncatewords:15 }}</p>
+                    <h5 class="fw-bold mb-3" style="color: var(--primary);">${{ producto.precio }}</h5>
+                    
+                    <form action="#" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ producto.id }}">
+                        <button type="submit" class="btn btn-outline-dark rounded-pill w-100">Agregar al Carrito</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-cup text-muted fs-1 mb-3 d-block opacity-50"></i>
+            <h4 class="font-playfair text-muted">Aún no hay productos en esta categoría.</h4>
+            <p>¡Estamos preparando algo delicioso!</p>
+        </div>
+        {% endfor %}
+        
+    </div>
+</div>
+{% endblock content %}
