@@ -27,7 +27,7 @@
 </section>
 
 
-<section id="menu" class="py-5" style="background-color: var(--muted);">
+<section id="menu" class="py-5">
     <div class="container py-4">
         <div class="text-center mb-5">
             <span class="text-uppercase fw-bold letter-spacing-1" style="color: var(--muted-foreground); letter-spacing: 2px; font-size: 0.85rem;">Clásicos</span>
@@ -37,19 +37,21 @@
         <div class="row g-4">
             {% for producto in productos %}
             <div class="col-md-4">
-                <div class="card product-card h-100 shadow-sm">
+                <div class="card product-card h-100 d-flex flex-column shadow-sm">
                     <img src="{{ producto.image.url }}" class="card-img-top" alt="{{ producto.nombre }}">
                     
-                    <div class="card-body p-4 text-center">
+                    <div class="card-body p-4 text-center d-flex flex-column flex-grow-1">
                         <h4 class="card-title font-playfair mb-2">{{ producto.nombre }}</h4>
                         <p class="card-text text-muted small mb-3">{{ producto.descripcion|truncatewords:15 }}</p>
-                        <h5 class="fw-bold mb-3" style="color: var(--primary);">${{ producto.precio }}</h5>
+                        <div class="mt-auto">
+                            <h5 class="fw-bold mb-3" style="color: var(--primary);">${{ producto.precio }}</h5>
                         
-                        <form action="#" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="product_id" value="{{ producto.id }}">
-                            <button type="submit" class="btn btn-outline-dark rounded-pill w-100">Agregar al Carrito</button>
-                        </form>
+                            <form action="#" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ producto.id }}">
+                                <button type="submit" class="btn btn-outline-dark rounded-pill w-100">Agregar al Carrito</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

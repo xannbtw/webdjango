@@ -7,4 +7,5 @@ urlpatterns = [
     path('menu/', views.menu_view, name='menu'),
     path('categoria/<int:categoria_id>/', views.ordernar_categorias_view, name='filtro_categoria'),
     path('nuestro-cafe/', views.cafe_views, name='nuestro_cafe'),
+    path('ubicacion/', views.ubi_views, name='ubicacion')
 ]

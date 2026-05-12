@@ -35,7 +35,7 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'nuestro_cafe' %}">Nuestro Café</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'menu' %}">Menú</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'nosotros' %}">Nosotros</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Ubicación</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'ubicacion' %}">Ubicación</a></li>
                     </ul>
 
                     <div class="d-flex align-items-center gap-3">
@@ -64,6 +64,59 @@
 
         {% block content %}
         {% endblock content %}
+
+
+        <footer class="pt-5 pb-4 mt-5">
+            <div class="container">
+                <div class="row">
+                    
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <h5 class="brand-text mb-3">
+                            <i class="bi bi-cup-hot brand-icon"></i> Nomade Café
+                        </h5>
+                        <p class="small">
+                            Tu refugio de café de especialidad en Chiguayante. Disfruta de la mejor selección de granos en un ambiente único.
+                        </p>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h5 class="mb-3">Enlaces</h5>
+                        <ul class="list-unstyled small">
+                            <li class="mb-2"><a href="{% url 'inicio' %}" class="text-decoration-none" style="color: var(--foreground);">Inicio</a></li>
+                            <li class="mb-2"><a href="{% url 'menu' %}" class="text-decoration-none" style="color: var(--foreground);">Menú</a></li>
+                            <li class="mb-2"><a href="{% url 'nosotros' %}" class="text-decoration-none" style="color: var(--foreground);">Nosotros</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <h5 class="mb-3" >Horarios</h5>
+                        <ul class="list-unstyled small">
+                            <li class="mb-2"><strong>Lun - Vie:</strong> 08:00 - 21:30</li>
+                            <li class="mb-2"><strong>Sábados:</strong> 10:00 - 21:30</li>
+                            <li class="mb-2"><strong>Domingos:</strong> 10:00 - 21:30</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <h5 class="mb-3">Síguenos</h5>
+                        <div class="d-flex gap-3">
+                            <a href="#" style="color: var(--foreground);"><i class="bi bi-instagram"></i></a>
+                            <a href="#" style="color: var(--foreground);"><i class="bi bi-facebook"></i></a>
+                            <a href="#" style="color: var(--foreground);"><i class="bi bi-tiktok"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="mt-2 mb-3" style="border-color: var(--border);">
+                <div class="row align-items-center">
+                    <div class="col-12 text-center">
+                        <p class="small mb-0">
+                            © 2026 Nomade. powered by colocolo
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
         
     </body>
 </html>

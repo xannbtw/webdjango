@@ -30,3 +30,6 @@ def ordernar_categorias_view(request, categoria_id):
 
 def cafe_views(request):
     return render(request, 'catalogo/nuestro-cafe.html')
+
+def ubi_views(request):
+    return render(request, 'catalogo/ubicacion.html')
