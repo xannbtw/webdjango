@@ -29,7 +29,7 @@
                     <p class="card-text text-muted small mb-3">{{ producto.descripcion|truncatewords:15 }}</p>
                     <h5 class="fw-bold mb-3" style="color: var(--primary);">${{ producto.precio }}</h5>
                     
-                    <form action="#" method="POST">
+                    <form action="{% url 'agregar_carrito' producto.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="product_id" value="{{ producto.id }}">
                         <button type="submit" class="btn btn-outline-dark rounded-pill w-100">Agregar al Carrito</button>

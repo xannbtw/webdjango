@@ -39,10 +39,10 @@
                     </ul>
 
                     <div class="d-flex align-items-center gap-3">
-                        <a href="#" class="position-relative text-dark text-decoration-none p-2">
+                        <a href="{% url 'ver_carrito' %}" class="position-relative text-dark text-decoration-none p-2">
                             <i class="bi bi-bag fs-5"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background-color: var(--primary); font-size: 0.75rem;">
-                                0
+                                {{cantidad_carrito | default:"0"}}
                             </span>
                         </a>
                         
@@ -67,6 +67,7 @@
 
 
         <footer class="pt-5 pb-4 mt-5">
+            <hr class="mt-2 mb-3" style="border-color: solid var(--border);">
             <div class="container">
                 <div class="row">
                     
