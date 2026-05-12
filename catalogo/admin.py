@@ -4,7 +4,7 @@ from .models import Categoria, Producto, Pedido, DetallePedido
 admin.site.register(Categoria) # añade categoria al panel de admin
 
 class ProductoAdmin(admin.ModelAdmin): 
-    list_display = ('nombre', 'categoria', 'precio', 'stock') # variables para crear el producto en el panel
+    list_display = ('nombre', 'categoria', 'precio', 'stock') # columnas q se ven en producto
     list_filter = ('categoria',) # agrega categoria al panel lateral
     search_fields = ('nombre',) # agrega una busqueda por nombre
     
