@@ -49,13 +49,15 @@
                         {% if user.is_authenticated %}
                             <div class="d-flex align-items-center gap-2">
                                 <span class="text-muted small d-none d-md-block">Hola, {{ user.username }}</span>
-                                <a href="#" class="btn btn-outline-dark rounded-pill px-4">Salir</a>
+                                <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-dark rounded-pill px-4">Salir</button>
+                                </form>
                             </div>
                         {% else %}
-                            <a href="#" class="btn btn-primary-custom rounded-pill px-4 shadow-sm">Iniciar Sesión</a>
+                            <a href="{% url 'login' %}" class="btn btn-primary-custom rounded-pill px-4 shadow-sm">Iniciar Sesión</a>
                         {% endif %}
                     </div>
-
 
                 </div>
                 
@@ -90,7 +92,7 @@
                     </div>
 
                     <div class="col-lg-3 col-md-6 mb-4">
-                        <h5 class="mb-3" >Horarios</h5>
+                        <h5 class="mb-3">Horarios</h5>
                         <ul class="list-unstyled small">
                             <li class="mb-2"><strong>Lun - Vie:</strong> 08:00 - 21:30</li>
                             <li class="mb-2"><strong>Sábados:</strong> 10:00 - 21:30</li>

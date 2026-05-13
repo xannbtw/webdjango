@@ -1,0 +1,17 @@
+{% extends 'catalogo/base.html' %}
+
+{% block content %}
+<div class="container py-5 mt-4" style="max-width: 420px;">
+    <div class="text-center mb-4">
+        <h2 class="font-playfair">Crear cuenta</h2>
+        <p class="text-muted small">¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+    </div>
+    <div class="card shadow-sm p-4">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-dark w-100 rounded-pill mt-2">Registrarse</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}
