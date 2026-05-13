@@ -12,9 +12,10 @@
                     <table class="table table-borderless align-middle">
                         <thead style="border-bottom: 2p x solid var(--border);">
                             <tr class="text-muted">
-                                <th>Producto</th>
+                                <th>Producto</th>1
                                 <th>Precio</th>
                                 <th>Cantidad</th>
+                                <th></th>
                                 <th class="text-end">Subtotal</th>
                             </tr>
                         </thead>
@@ -25,6 +26,11 @@
                                 <td class="py-3 text-muted">${{ item.precio }}</td>
                                 <td class="py-3">{{ item.cantidad }}</td>
                                 <td class="py-3 text-end fw-bold" style="color: var(--primary);">${{ item.subtotal }}</td>
+                                <td class="py-3 text-center">
+                                    <a href="{% url 'eliminar_carrito' item.id %}" class="text-danger text-decoration-none">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>

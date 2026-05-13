@@ -82,6 +82,16 @@ def ver_carrito(request):
     }
     return render(request, 'catalogo/carrito.html', context)
 
+def eliminar_carrito(request, producto_id):
+    carrito = request.session.get('carrito', {}) # carrito de la sesion
+    id_str = str(producto_id) # pasa el id a str
+    if id_str in carrito:
+        del carrito[id_str] # borra el prod del carrito
+        request.session['carrito'] = carrito # guarda carrito actualizado
+        messages.info(request, 'producto eliminado') # mensaje de aviso
+    
+    return redirect('ver_carrito')
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
