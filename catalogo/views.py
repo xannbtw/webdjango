@@ -95,6 +95,9 @@ def eliminar_carrito(request, producto_id):
 def pago_views(request):
     return render(request, 'catalogo/pago.html')
 
+def pago_exitoso_views(request):
+    return render(request, 'catalogo/pagoexitoso.html')
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
