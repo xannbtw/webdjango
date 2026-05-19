@@ -76,25 +76,36 @@ body {
     align-items: center;
     color: var(--primary);
     justify-content: space-between;
-
+    max-width: 1300px;
+    margin: auto; 
     padding-left: 10%;
     padding-right: 5%;
 }
 
 .hero-d {
     flex: 1;
-    padding-right: 5%;  
+}
+
+.titulo{
+    font-weight: bold;
+    font-size: 75px;
+}
+
+.desc {
+    font-size: 18px;
+    color: var(--foreground);
 }
 
 .hero-imagen {
     flex: 1;
     display: flex;
     justify-content: center;
+    transform: rotate(-10deg);
 }
 
 .hero-img {
-    max-width: 70%;
-    width: 70%;
+    width: 100%;
+    animation: flotar 4s ease-in-out infinite;
 }
 
 .hero-section .btn-conocenos {
@@ -136,4 +147,34 @@ body {
     height: 250px;
     width: 100%;
     object-fit: cover;
+}
+
+
+@keyframes flotar {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@media (max-width: 768px) {
+    
+    .hero-section .section-content {
+        align-items: center;
+        padding-top: 10vh;
+    }
+
+    .hero-d {
+        text-align: center;
+        padding-right: 20px;
+        margin-bottom: 2rem;
+    }
+    .hero-img {
+        display: none;
+    }
 }

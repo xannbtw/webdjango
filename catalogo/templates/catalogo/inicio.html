@@ -1,5 +1,7 @@
 {% extends 'catalogo/base.html' %}
 
+{%load static%}
+
 {% block title %}Catálogo - Cafetería{% endblock %}
 
 {% block content %}
@@ -7,15 +9,15 @@
 <section class="hero-section">
     <div class="section-content">
         <div class="hero-d">
-            <h2 class="titulo">NOMADE KAFE</h2>
-            <h3 class="subtitulo">KAFE</h3>
+            <h2 class="titulo ">NOMADE KÁFE</h2>
+            <h3 class="subtitulo"></h3>
             <p class="desc ">Tu refugio de especialidad en el corazón de Chiguayante. <br> Tómate un momento, disfruta el viaje.</p>
-            <a class="btn rounded-pill px-4 shadow-sm" href="#">Ver menu</a>
-            <a class="btn-conocenos rounded-pill px-4 shadow-sm" href="#">Conocenos</a>
+            <a class="btn rounded-pill px-4 shadow-sm" href="{% url 'menu' %}">Ver menu</a>
+            <a class="btn-conocenos rounded-pill px-4 shadow-sm" href="{% url 'nosotros' %}">Conocenos</a>
         </div>
 
         <div class="hero-imagen">
-            <img src="" alt="" class="hero-img">
+            <img src="{% static 'img/cafe2.png'%}" alt="" class="hero-img">
         </div>
 
     </div>
