@@ -39,7 +39,12 @@ def agregar_carrito(request, producto_id):
     if request.method == 'POST':
         producto = get_object_or_404(Producto, id=producto_id) # se busca el producto.
         carrito = request.session.get('carrito', {}) # si el cliente tiene un carrito se usa, si no se crea uno vacio.
-        id_str = str(producto_id) # se guarda el id como string.
+        
+        tamano = request.POST.get('tamano', '')
+        tipo_leche = request.POST.get('tipo_leche', '')
+        
+        id_str = f"{producto_id}_{tamano}_{tipo_leche}" if (tamano or tipo_leche) else str(producto_id)
+        
         if id_str in carrito:
             carrito[id_str]['cantidad'] += 1 #si ya esta el prod en el carro se suma 1.
         else: # si no esta, se agrega con los datos.
@@ -48,11 +53,15 @@ def agregar_carrito(request, producto_id):
                 'nombre': producto.nombre,
                 'precio': producto.precio,
                 'cantidad': 1,
+                'tamano': tamano,
+                'tipo_leche': tipo_leche
             }
             
         request.session['carrito'] = carrito # se guarda el carrito actualizado
         messages.success(request, 'producto agregado.')
-        return redirect('menu') # se redirige al menu
+        # Intentar redirigir a la misma página o al menú
+        next_url = request.POST.get('next', 'menu')
+        return redirect(next_url)
     return redirect('inicio')
 
 def ver_carrito(request):
@@ -73,7 +82,9 @@ def ver_carrito(request):
             'nombre': item['nombre'],
             'precio': item['precio'],
             'cantidad': cantidad,
-            'subtotal': subtotal
+            'subtotal': subtotal,
+            'tamano': item.get('tamano', ''),
+            'tipo_leche': item.get('tipo_leche', '')
         })
         
     context = {
@@ -82,9 +93,9 @@ def ver_carrito(request):
     }
     return render(request, 'catalogo/carrito.html', context)
 
-def eliminar_carrito(request, producto_id):
+def eliminar_carrito(request, item_id):
     carrito = request.session.get('carrito', {}) # carrito de la sesion
-    id_str = str(producto_id) # pasa el id a str
+    id_str = str(item_id) # pasa el id a str
     if id_str in carrito:
         del carrito[id_str] # borra el prod del carrito
         request.session['carrito'] = carrito # guarda carrito actualizado

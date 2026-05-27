@@ -22,7 +22,16 @@
                         <tbody>
                             {% for item in carrito_list %}
                             <tr style="border-bottom: 1px solid var(--border);">
-                                <td class="py-3 fw-bold" style="color: var(--foreground);">{{ item.nombre }}</td>
+                                <td class="py-3" style="color: var(--foreground);">
+                                    <div class="fw-bold">{{ item.nombre }}</div>
+                                    {% if item.tamano or item.tipo_leche %}
+                                        <small class="text-muted d-block mt-1" style="font-size: 0.8rem;">
+                                            {% if item.tamano %}{{ item.tamano }}{% endif %}
+                                            {% if item.tamano and item.tipo_leche %} | {% endif %}
+                                            {% if item.tipo_leche %}{{ item.tipo_leche }}{% endif %}
+                                        </small>
+                                    {% endif %}
+                                </td>
                                 <td class="py-3 text-muted">${{ item.precio }}</td>
                                 <td class="py-3">{{ item.cantidad }}</td>
                                 <td class="py-3 text-end fw-bold" style="color: var(--primary);">${{ item.subtotal }}</td>

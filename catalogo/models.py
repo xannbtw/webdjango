@@ -35,3 +35,33 @@ class DetallePedido(models.Model):
     
     def __str__(self):
         return f'{self.cantidad} x {self.producto.nombre}'
+
+class ItemPedido(models.Model):
+    TAMANO_CHOICES = [
+        ('Pequeño', 'Pequeño'),
+        ('Mediano', 'Mediano'),
+        ('Grande', 'Grande'),
+    ]
+    TIPO_LECHE_CHOICES = [
+        ('Entera', 'Entera'),
+        ('Descremada', 'Descremada'),
+        ('Almendra', 'Almendra'),
+        ('Avena', 'Avena'),
+        ('Sin Leche', 'Sin Leche'),
+    ]
+    
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.IntegerField(default=1)
+    tamano = models.CharField(max_length=20, choices=TAMANO_CHOICES, null=True, blank=True)
+    tipo_leche = models.CharField(max_length=20, choices=TIPO_LECHE_CHOICES, null=True, blank=True)
+
+    def __str__(self):
+        opciones = []
+        if self.tamano:
+            opciones.append(self.tamano)
+        if self.tipo_leche:
+            opciones.append(self.tipo_leche)
+            
+        opciones_str = f" - Opciones: {', '.join(opciones)}" if opciones else ""
+        return f"{self.cantidad} x {self.producto.nombre}{opciones_str}"

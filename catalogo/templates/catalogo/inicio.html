@@ -11,7 +11,8 @@
         <div class="hero-d">
             <h2 class="titulo ">NOMADE KÁFE</h2>
             <h3 class="subtitulo"></h3>
-            <p class="desc ">Tu refugio de especialidad en el corazón de Chiguayante. <br> Tómate un momento, disfruta el viaje.</p>
+            <p class="desc ">Tu refugio de especialidad en el corazón de Chiguayante. <br> Tómate un momento, disfruta
+                el viaje.</p>
             <a class="btn rounded-pill px-4 shadow-sm" href="{% url 'menu' %}">Ver menu</a>
             <a class="btn-conocenos rounded-pill px-4 shadow-sm" href="{% url 'nosotros' %}">Conocenos</a>
         </div>
@@ -28,31 +29,88 @@
 <section id="menu" class="py-5">
     <div class="container py-4">
         <div class="text-center mb-5">
-            <span class="text-uppercase fw-bold letter-spacing-1" style="color: var(--muted-foreground); letter-spacing: 2px; font-size: 0.85rem;">Clásicos</span>
+            <span class="text-uppercase fw-bold letter-spacing-1"
+                style="color: var(--muted-foreground); letter-spacing: 2px; font-size: 0.85rem;">Clásicos</span>
             <h2 class="display-5 mt-2 font-playfair">Nuestra Selección</h2>
         </div>
-        
+
         <div class="row g-4">
             {% for producto in productos %}
             <div class="col-md-4">
                 <div class="card product-card h-100 d-flex flex-column shadow-sm">
                     <img src="{{ producto.image.url }}" class="card-img-top" alt="{{ producto.nombre }}">
-                    
+
                     <div class="card-body p-4 text-center d-flex flex-column flex-grow-1">
                         <h4 class="card-title font-playfair mb-2">{{ producto.nombre }}</h4>
                         <p class="card-text text-muted small mb-3">{{ producto.descripcion|truncatewords:15 }}</p>
                         <div class="mt-auto">
                             <h5 class="fw-bold mb-3" style="color: var(--primary);">${{ producto.precio }}</h5>
-                        
-                            <form action="{% url 'agregar_carrito' producto.id %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="product_id" value="{{ producto.id }}">
-                                <button type="submit" class="btn btn-outline-dark rounded-pill w-100">Agregar al Carrito</button>
-                            </form>
+
+                            <button class="btn btn-outline-dark rounded-pill w-100" type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasProducto{{producto.id}}"
+                                aria-controls="offcanvasProducto{{producto.id}}">
+                                Agregar al Carrito
+                            </button>
+
+                            <!-- Offcanvas para el producto -->
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="offcanvas offcanvas-end text-start" tabindex="-1" id="offcanvasProducto{{producto.id}}"
+                aria-labelledby="offcanvasProductoLabel{{producto.id}}">
+                <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title font-playfair" id="offcanvasProductoLabel{{producto.id}}">{{
+                        producto.nombre }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body d-flex flex-column">
+                    {% if producto.image %}
+                    <img src="{{ producto.image.url }}" class="img-fluid rounded mb-3 shadow-sm"
+                        alt="{{ producto.nombre }}">
+                    {% else %}
+                    <img src="https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=800"
+                        class="img-fluid rounded mb-3 shadow-sm" alt="">
+                    {% endif %}
+                    <p class="text-muted small">{{ producto.descripcion }}</p>
+                    <h4 class="fw-bold mb-4" style="color: var(--primary);">${{ producto.precio }}</h4>
+
+                    <form action="{% url 'agregar_carrito' producto.id %}" method="POST" class="mt-auto">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ producto.id }}">
+                        <input type="hidden" name="next" value="{{ request.path }}">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase"
+                                style="color: var(--muted-foreground);">Tamaño</label>
+                            <select class="form-select rounded-pill" name="tamano">
+                                <option value="" selected>Normal (Por defecto)</option>
+                                <option value="Pequeño">Pequeño</option>
+                                <option value="Mediano">Mediano</option>
+                                <option value="Grande">Grande</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase"
+                                style="color: var(--muted-foreground);">Tipo de Leche</label>
+                            <select class="form-select rounded-pill" name="tipo_leche">
+                                <option value="" selected>Normal (Por defecto)</option>
+                                <option value="Entera">Entera</option>
+                                <option value="Descremada">Descremada</option>
+                                <option value="Almendra">Almendra</option>
+                                <option value="Avena">Avena</option>
+                                <option value="Sin Leche">Sin Leche</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-dark rounded-pill w-100 shadow-sm py-2">Confirmar
+                            Agregar</button>
+                    </form>
+                </div>
+            </div>
+
             {% empty %}
             <div class="col-12 text-center">
                 <p>No hay productos en el catálogo por ahora.</p>
