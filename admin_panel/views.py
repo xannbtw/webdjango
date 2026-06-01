@@ -293,8 +293,7 @@ def categoria_eliminar(request, pk):
 
     if request.method == 'POST':
         nombre = categoria.nombre
-        # Verificar si tiene productos asociados
-        if categoria.producto_set.exists():
+        if categoria.productos.exists():
             messages.error(
                 request,
                 f'No puedes eliminar "{nombre}" porque tiene productos asociados. '
@@ -311,7 +310,7 @@ def categoria_eliminar(request, pk):
         'nombre': categoria.nombre,
         'cancelar_url': 'admin_panel:categoria_lista',
         'advertencia': (
-            f'Esta categoría tiene {categoria.producto_set.count()} producto(s) asociado(s).'
-            if categoria.producto_set.exists() else None
+            f'Esta categoría tiene {categoria.productos.count()} producto(s) asociado(s).'
+            if categoria.productos.exists() else None
         ),
     })
