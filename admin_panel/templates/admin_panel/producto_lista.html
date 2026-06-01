@@ -1,0 +1,170 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}Productos{% endblock %}
+{% block breadcrumb %} / <a href="{% url 'admin_panel:producto_lista' %}">Productos</a>{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'admin_panel:producto_crear' %}" class="btn btn-primary btn-sm">+ Nuevo producto</a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Productos</h1>
+  <p class="page-subtitle">{{ total_filtrado }} resultado{% if total_filtrado != 1 %}s{% endif %}</p>
+</div>
+
+<!-- Filtros -->
+<div class="filter-bar">
+  <form method="get" class="filter-form" id="filterForm">
+    <input
+      type="text"
+      name="q"
+      value="{{ query }}"
+      placeholder="Buscar por nombre, descripción o categoría…"
+      class="form-control filter-search"
+    >
+    <select name="categoria" class="form-control filter-select" onchange="this.form.submit()">
+      <option value="">Todas las categorías</option>
+      {% for cat in categorias %}
+      <option value="{{ cat.pk }}" {% if cat.pk|stringformat:"s" == cat_id %}selected{% endif %}>{{ cat.nombre }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-secondary">Filtrar</button>
+    {% if query or cat_id %}
+    <a href="{% url 'admin_panel:producto_lista' %}" class="btn btn-ghost">Limpiar</a>
+    {% endif %}
+  </form>
+</div>
+
+<!-- Bulk actions -->
+<form method="post" action="" id="bulkForm">
+  {% csrf_token %}
+  <input type="hidden" name="selected_ids" id="selectedIds">
+
+  <div class="bulk-bar" id="bulkBar" style="display:none;">
+    <span class="bulk-count" id="bulkCount">0 seleccionados</span>
+    <select name="action" class="form-control filter-select">
+      <option value="">Acción en lote…</option>
+      <option value="delete">Eliminar</option>
+    </select>
+    <button type="submit" class="btn btn-secondary btn-sm" onclick="return confirmBulk()">Aplicar</button>
+    <button type="button" class="btn btn-ghost btn-sm" onclick="clearSelection()">Cancelar</button>
+  </div>
+
+  <!-- Tabla -->
+  {% if productos %}
+  <div class="table-wrap">
+    <table class="table table--interactive">
+      <thead>
+        <tr>
+          <th class="col-check">
+            <input type="checkbox" id="selectAll" class="form-check-input">
+          </th>
+          <th>Imagen</th>
+          <th>
+            <a href="?q={{ query }}&categoria={{ cat_id }}&order={% if order == 'nombre' %}-nombre{% else %}nombre{% endif %}" class="sort-link">
+              Nombre {% if order == 'nombre' %}↑{% elif order == '-nombre' %}↓{% endif %}
+            </a>
+          </th>
+          <th>Categoría</th>
+          <th>
+            <a href="?q={{ query }}&categoria={{ cat_id }}&order={% if order == 'precio' %}-precio{% else %}precio{% endif %}" class="sort-link">
+              Precio {% if order == 'precio' %}↑{% elif order == '-precio' %}↓{% endif %}
+            </a>
+          </th>
+          <th>Stock</th>
+          <th class="col-actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for producto in productos %}
+        <tr data-id="{{ producto.pk }}">
+          <td class="col-check">
+            <input type="checkbox" class="row-check form-check-input" value="{{ producto.pk }}">
+          </td>
+          <td class="col-img">
+            {% if producto.image %}
+            <img src="{{ producto.image.url }}" alt="{{ producto.nombre }}" class="table-thumb">
+            {% else %}
+            <div class="table-thumb-empty">▦</div>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'admin_panel:producto_editar' producto.pk %}" class="table-link">
+              {{ producto.nombre }}
+            </a>
+          </td>
+          <td>{{ producto.categoria.nombre|default:"—" }}</td>
+          <td class="num">${{ producto.precio }}</td>
+          <td class="num">{{ producto.stock }}</td>
+          <td class="col-actions">
+            <div class="action-group">
+              <a href="{% url 'admin_panel:producto_editar' producto.pk %}" class="action-btn" title="Editar">✎</a>
+              <a href="{% url 'admin_panel:producto_eliminar' producto.pk %}" class="action-btn action-btn--danger" title="Eliminar">✕</a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  {% if productos.has_other_pages %}
+  <div class="pagination">
+    {% if productos.has_previous %}
+    <a href="?q={{ query }}&categoria={{ cat_id }}&page={{ productos.previous_page_number }}" class="page-btn">← Anterior</a>
+    {% endif %}
+    <span class="page-info">Página {{ productos.number }} de {{ productos.paginator.num_pages }}</span>
+    {% if productos.has_next %}
+    <a href="?q={{ query }}&categoria={{ cat_id }}&page={{ productos.next_page_number }}" class="page-btn">Siguiente →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="empty-page">
+    <div class="empty-icon">▦</div>
+    <h2>Sin resultados</h2>
+    <p>{% if query or cat_id %}Ningún producto coincide con los filtros.{% else %}Aún no hay productos en el catálogo.{% endif %}</p>
+    <a href="{% url 'admin_panel:producto_crear' %}" class="btn btn-primary">+ Crear primer producto</a>
+  </div>
+  {% endif %}
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('selectAll').addEventListener('change', function() {
+  document.querySelectorAll('.row-check').forEach(c => c.checked = this.checked);
+  updateBulkBar();
+});
+document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change', updateBulkBar));
+
+function updateBulkBar() {
+  const checked = document.querySelectorAll('.row-check:checked');
+  const bulkBar = document.getElementById('bulkBar');
+  const bulkCount = document.getElementById('bulkCount');
+  const selectedIds = document.getElementById('selectedIds');
+  if (checked.length > 0) {
+    bulkBar.style.display = 'flex';
+    bulkCount.textContent = checked.length + ' seleccionado' + (checked.length > 1 ? 's' : '');
+    selectedIds.value = Array.from(checked).map(c => c.value).join(',');
+  } else {
+    bulkBar.style.display = 'none';
+  }
+}
+
+function clearSelection() {
+  document.querySelectorAll('.row-check, #selectAll').forEach(c => c.checked = false);
+  updateBulkBar();
+}
+
+function confirmBulk() {
+  const action = document.querySelector('[name="action"]').value;
+  if (!action) { alert('Selecciona una acción.'); return false; }
+  if (action === 'delete') return confirm('¿Eliminar los productos seleccionados? Esta acción no se puede deshacer.');
+  return true;
+}
+</script>
+{% endblock %}

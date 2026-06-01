@@ -10,6 +10,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ob(qfz#v(1&%bm^=j!o6+
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
+MERCADOPAGO_ACCESS_TOKEN = 'APP_USR-4755070705524165-060116-1fead373c9d613bae911aa96def363b6-3443280136'
+MERCADOPAGO_PUBLIC_KEY = 'APP_USR-f25f7b42-5b87-475e-9714-d105ba56f885'
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary',
     'catalogo',
+    'admin_panel',
 ]
 
 

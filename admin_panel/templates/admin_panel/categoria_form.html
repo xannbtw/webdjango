@@ -1,0 +1,81 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+{% block breadcrumb %}
+ / <a href="{% url 'admin_panel:categoria_lista' %}">Categorías</a>
+ / {{ titulo }}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">{{ titulo }}</h1>
+</div>
+
+<div class="form-layout form-layout--narrow">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card">
+      <div class="card-header"><h2 class="card-title">Datos de la categoría</h2></div>
+      <div class="card-body">
+
+        <div class="form-group">
+          <label for="{{ form.nombre.id_for_label }}">Nombre *</label>
+          {{ form.nombre }}
+          {% if form.nombre.errors %}<div class="field-error">{{ form.nombre.errors }}</div>{% endif %}
+        </div>
+
+        {% if form.descripcion %}
+        <div class="form-group">
+          <label for="{{ form.descripcion.id_for_label }}">Descripción</label>
+          {{ form.descripcion }}
+          {% if form.descripcion.errors %}<div class="field-error">{{ form.descripcion.errors }}</div>{% endif %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label>Imagen</label>
+            {% if categoria.image %}
+            <div class="image-preview" id="imagePreview">
+              <img src="{{ categoria.image.url }}" alt="{{ categoria.nombre }}" id="previewImg">
+            </div>
+            {% else %}
+            <div class="image-preview image-preview--empty" id="imagePreview">
+              <span>Sin imagen</span>
+            </div>
+            {% endif %}
+            {{ form.image }}
+            {% if form.image.errors %}<div class="field-error">{{ form.image.errors }}</div>{% endif %}
+          </div>
+      </div>
+    </div>
+
+    <div class="form-actions" style="margin-top: 1rem;">
+      <button type="submit" class="btn btn-primary">{{ accion }}</button>
+      <a href="{% url 'admin_panel:categoria_lista' %}" class="btn btn-ghost">Cancelar</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const fileInput = document.querySelector('input[type="file"]');
+if (fileInput) {
+  fileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const preview = document.getElementById('imagePreview');
+      if (preview) {
+        preview.innerHTML = `<img src="${e.target.result}" id="previewImg" alt="Preview">`;
+        preview.classList.remove('image-preview--empty');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+</script>
+{% endblock %}

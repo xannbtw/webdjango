@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Panel Admin{% endblock %} — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+{% load static %}
+<link rel="stylesheet" href="{% static 'admin_panel/css/admin.css' %}">
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">Admin</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Cerrar menú">✕</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="{% url 'admin_panel:dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <span class="nav-icon">◈</span>
+        <span>Dashboard</span>
+      </a>
+
+      <div class="nav-section">Catálogo</div>
+
+      <a href="{% url 'admin_panel:producto_lista' %}" class="nav-item {% if 'producto' in request.resolver_match.url_name %}active{% endif %}">
+        <span class="nav-icon">▦</span>
+        <span>Productos</span>
+      </a>
+      <a href="{% url 'admin_panel:producto_crear' %}" class="nav-item nav-sub">
+        <span class="nav-icon">+</span>
+        <span>Nuevo producto</span>
+      </a>
+
+      <a href="{% url 'admin_panel:categoria_lista' %}" class="nav-item {% if 'categoria' in request.resolver_match.url_name %}active{% endif %}">
+        <span class="nav-icon">◫</span>
+        <span>Categorías</span>
+      </a>
+      <a href="{% url 'admin_panel:categoria_crear' %}" class="nav-item nav-sub">
+        <span class="nav-icon">+</span>
+        <span>Nueva categoría</span>
+      </a>
+
+      <div class="nav-section">Configuración</div>
+
+      <a href="{% url 'admin_panel:logout' %}" class="nav-item nav-logout">
+        <span class="nav-icon">→</span>
+        <span>Cerrar sesión</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-badge">
+        <div class="user-avatar">{{ user.username|slice:":2"|upper }}</div>
+        <div class="user-info">
+          <span class="user-name">{{ user.get_full_name|default:user.username }}</span>
+          <span class="user-role">{% if user.is_superuser %}Superadmin{% else %}Staff{% endif %}</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Main content -->
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+      <div class="breadcrumb">
+        <a href="{% url 'admin_panel:dashboard' %}">Admin</a>
+        {% block breadcrumb %}{% endblock %}
+      </div>
+      <div class="topbar-actions">
+        {% block topbar_actions %}{% endblock %}
+      </div>
+    </header>
+
+    <!-- Mensajes flash -->
+    {% if messages %}
+    <div class="messages-container">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        <span>{{ message }}</span>
+        <button class="alert-close" onclick="this.parentElement.remove()">✕</button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="page-content">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+{% else %}
+  {% block auth_content %}{% endblock %}
+{% endif %}
+
+<script src="{% static 'admin_panel/js/admin.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

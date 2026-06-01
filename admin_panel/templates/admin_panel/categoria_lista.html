@@ -1,0 +1,82 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}Categorías{% endblock %}
+{% block breadcrumb %} / <a href="{% url 'admin_panel:categoria_lista' %}">Categorías</a>{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'admin_panel:categoria_crear' %}" class="btn btn-primary btn-sm">+ Nueva categoría</a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Categorías</h1>
+</div>
+
+<div class="filter-bar">
+  <form method="get" class="filter-form">
+    <input type="text" name="q" value="{{ query }}" placeholder="Buscar categoría…" class="form-control filter-search">
+    <button type="submit" class="btn btn-secondary">Buscar</button>
+    {% if query %}<a href="{% url 'admin_panel:categoria_lista' %}" class="btn btn-ghost">Limpiar</a>{% endif %}
+  </form>
+</div>
+
+{% if categorias %}
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Productos</th>
+        <th class="col-actions">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cat in categorias %}
+      <tr>
+        <td class="col-img">
+          {% if cat.imagen %}
+          <img src="{{ cat.imagen.url }}" alt="{{ cat.nombre }}" class="table-thumb">
+          {% else %}
+          <div class="table-thumb-empty">◫</div>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'admin_panel:categoria_editar' cat.pk %}" class="table-link">{{ cat.nombre }}</a>
+        </td>
+        <td class="text-muted">{{ cat.descripcion|default:"—"|truncatechars:60 }}</td>
+        <td class="num">{{ cat.num_productos }}</td>
+        <td class="col-actions">
+          <div class="action-group">
+            <a href="{% url 'admin_panel:categoria_editar' cat.pk %}" class="action-btn" title="Editar">✎</a>
+            <a href="{% url 'admin_panel:categoria_eliminar' cat.pk %}" class="action-btn action-btn--danger" title="Eliminar">✕</a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if categorias.has_other_pages %}
+<div class="pagination">
+  {% if categorias.has_previous %}
+  <a href="?q={{ query }}&page={{ categorias.previous_page_number }}" class="page-btn">← Anterior</a>
+  {% endif %}
+  <span class="page-info">Página {{ categorias.number }} de {{ categorias.paginator.num_pages }}</span>
+  {% if categorias.has_next %}
+  <a href="?q={{ query }}&page={{ categorias.next_page_number }}" class="page-btn">Siguiente →</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="empty-page">
+  <div class="empty-icon">◫</div>
+  <h2>Sin categorías</h2>
+  <p>Crea la primera categoría para organizar tus productos.</p>
+  <a href="{% url 'admin_panel:categoria_crear' %}" class="btn btn-primary">+ Crear categoría</a>
+</div>
+{% endif %}
+{% endblock %}

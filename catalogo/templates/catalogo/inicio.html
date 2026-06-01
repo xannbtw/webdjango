@@ -38,7 +38,11 @@
             {% for producto in productos %}
             <div class="col-md-4">
                 <div class="card product-card h-100 d-flex flex-column shadow-sm">
-                    <img src="{{ producto.image.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                {% if producto.image %}
+                <img src="{{ producto.image.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                {% else %}
+                <img src="https://placehold.co/400x300?text=Sin+imagen" class="card-img-top" alt="{{ producto.nombre }}">
+                {% endif %}
 
                     <div class="card-body p-4 text-center d-flex flex-column flex-grow-1">
                         <h4 class="card-title font-playfair mb-2">{{ producto.nombre }}</h4>

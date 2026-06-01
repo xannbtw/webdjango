@@ -1,0 +1,27 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}Eliminar {{ tipo }}{% endblock %}
+{% block breadcrumb %} / Eliminar{% endblock %}
+
+{% block content %}
+<div class="confirm-wrapper">
+  <div class="confirm-card">
+    <div class="confirm-icon">⚠</div>
+    <h1 class="confirm-title">¿Eliminar este {{ tipo }}?</h1>
+    <p class="confirm-msg">
+      Estás a punto de eliminar <strong>{{ nombre }}</strong>.
+      Esta acción no se puede deshacer.
+    </p>
+
+    {% if advertencia %}
+    <div class="alert alert-warning">{{ advertencia }}</div>
+    {% endif %}
+
+    <form method="post" class="confirm-form">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+      <a href="{% url cancelar_url %}" class="btn btn-ghost">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

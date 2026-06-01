@@ -1,17 +1,272 @@
 {% extends 'catalogo/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container py-5 mt-4" style="max-width: 420px;">
-    <div class="text-center mb-4">
-        <h2 class="font-playfair">Crear cuenta</h2>
-        <p class="text-muted small">¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-modal" id="loginModal">
+
+    <button class="login-close" onclick="window.location.href='/'">✕</button>
+
+    <div class="login-modal-header">
+      <div class="login-logo">
+        <i class="bi bi-cup-hot"></i>
+      </div>
+      <h2 class="login-title font-playfair">Crear cuenta</h2>
+      <p class="login-subtitle">Únete a la familia Nomade</p>
     </div>
-    <div class="card shadow-sm p-4">
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-dark w-100 rounded-pill mt-2">Registrarse</button>
-        </form>
+
+    {% if form.errors %}
+    <div class="login-error">
+      Por favor corrige los errores e intenta de nuevo.
     </div>
+    {% endif %}
+
+    <form method="post" class="login-form">
+      {% csrf_token %}
+
+      <div class="login-field">
+        <label for="id_username">Usuario</label>
+        <input
+          type="text"
+          name="username"
+          id="id_username"
+          class="login-input {% if form.username.errors %}input-error{% endif %}"
+          placeholder="Nombre de usuario"
+          value="{{ form.username.value|default:'' }}"
+          autofocus
+          autocomplete="username"
+          required
+        >
+        {% if form.username.errors %}
+        <span class="field-hint error">{{ form.username.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <div class="login-field">
+        <label for="id_password1">Contraseña</label>
+        <input
+          type="password"
+          name="password1"
+          id="id_password1"
+          class="login-input {% if form.password1.errors %}input-error{% endif %}"
+          placeholder="Mínimo 8 caracteres"
+          autocomplete="new-password"
+          required
+        >
+        {% if form.password1.errors %}
+        <span class="field-hint error">{{ form.password1.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <div class="login-field">
+        <label for="id_password2">Confirmar contraseña</label>
+        <input
+          type="password"
+          name="password2"
+          id="id_password2"
+          class="login-input {% if form.password2.errors %}input-error{% endif %}"
+          placeholder="Repite tu contraseña"
+          autocomplete="new-password"
+          required
+        >
+        {% if form.password2.errors %}
+        <span class="field-hint error">{{ form.password2.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="login-btn">Registrarse</button>
+    </form>
+
+    <div class="login-footer">
+      ¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a>
+    </div>
+
+  </div>
 </div>
+
+<style>
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.login-modal {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: slideUp 0.25s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.login-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: background 0.15s;
+}
+.login-close:hover { background: #e5e7eb; color: #111; }
+
+.login-modal-header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.login-logo {
+  width: 52px;
+  height: 52px;
+  background: var(--primary, #c47b5a);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+.login-logo i { font-size: 22px; color: #fff; }
+
+.login-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 0.25rem;
+}
+
+.login-subtitle {
+  font-size: 13.5px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.login-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font-size: 13px;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-field label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #374151;
+  letter-spacing: 0.02em;
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 50px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #111;
+  background: #f9fafb;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.login-input:focus {
+  border-color: var(--primary, #c47b5a);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(196, 123, 90, 0.15);
+}
+.login-input::placeholder { color: #9ca3af; }
+.login-input.input-error { border-color: #dc2626; }
+
+.field-hint {
+  font-size: 12px;
+  padding-left: 0.75rem;
+}
+.field-hint.error { color: #dc2626; }
+
+.login-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--primary, #c47b5a);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 0.25rem;
+  transition: background 0.2s, transform 0.1s;
+  letter-spacing: 0.02em;
+}
+.login-btn:hover  { background: #b36a49; }
+.login-btn:active { transform: scale(0.98); }
+
+.login-footer {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: 13px;
+  color: #6b7280;
+}
+.login-footer a {
+  color: var(--primary, #c47b5a);
+  text-decoration: none;
+  font-weight: 500;
+}
+.login-footer a:hover { text-decoration: underline; }
+</style>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') window.location.href = '/';
+});
+document.getElementById('loginOverlay').addEventListener('click', function(e) {
+  if (e.target === this) window.location.href = '/';
+});
+</script>
+
 {% endblock content %}

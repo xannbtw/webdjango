@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Categoria, Producto
+import mercadopago
+from django.conf import settings
 # Create your views here.
 
 def catalogo_view(request):
@@ -54,8 +56,9 @@ def agregar_carrito(request, producto_id):
                 'precio': producto.precio,
                 'cantidad': 1,
                 'tamano': tamano,
-                'tipo_leche': tipo_leche
-            }
+                'tipo_leche': tipo_leche,
+                'imagen': producto.image.url if producto.image else '',
+}
             
         request.session['carrito'] = carrito # se guarda el carrito actualizado
         messages.success(request, 'producto agregado.')
@@ -84,7 +87,8 @@ def ver_carrito(request):
             'cantidad': cantidad,
             'subtotal': subtotal,
             'tamano': item.get('tamano', ''),
-            'tipo_leche': item.get('tipo_leche', '')
+            'tipo_leche': item.get('tipo_leche', ''),
+            'imagen': item.get('imagen', ''),
         })
         
     context = {
@@ -104,9 +108,45 @@ def eliminar_carrito(request, item_id):
     return redirect('ver_carrito')
 
 def pago_views(request):
-    return render(request, 'catalogo/pago.html')
+    carrito = request.session.get('carrito', {})
+    if not carrito:
+        messages.warning(request, 'Tu carrito está vacío.')
+        return redirect('ver_carrito')
+
+    sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
+
+    items = []
+    for key, item in carrito.items():
+        items.append({
+            "title": item['nombre'],
+            "quantity": int(item['cantidad']),
+            "unit_price": float(item['precio']),
+            "currency_id": "CLP",
+        })
+
+    preference_data = {
+        "items": items,
+        "back_urls": {
+            "success": "https://www.google.com",
+            "failure": "https://www.google.com",
+            "pending": "https://www.google.com",
+        },
+    }
+
+    preference = sdk.preference().create(preference_data)
+
+    if "response" not in preference or "init_point" not in preference["response"]:
+        print("ERROR MP:", preference)
+        messages.error(request, 'Error al conectar con Mercado Pago.')
+        return redirect('ver_carrito')
+
+    return redirect(preference["response"]["init_point"])
+
+
 
 def pago_exitoso_views(request):
+    request.session['carrito'] = {}
+    messages.success(request, '¡Pago realizado con éxito! Gracias por tu compra.')
     return render(request, 'catalogo/pagoexitoso.html')
 
 from django.contrib.auth.forms import UserCreationForm

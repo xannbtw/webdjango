@@ -1,0 +1,137 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block breadcrumb %} / Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Dashboard</h1>
+  <p class="page-subtitle">Resumen del catálogo de productos</p>
+</div>
+
+<!-- Stats grid -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon stat-icon--blue">▦</div>
+    <div class="stat-body">
+      <div class="stat-value">{{ total_productos }}</div>
+      <div class="stat-label">Productos totales</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon--green">✓</div>
+    <div class="stat-body">
+      <div class="stat-value">{{ productos_activos }}</div>
+      <div class="stat-label">Disponibles</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon--amber">○</div>
+    <div class="stat-body">
+      <div class="stat-value">{{ productos_inactivos }}</div>
+      <div class="stat-label">No disponibles</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon--teal">◫</div>
+    <div class="stat-body">
+      <div class="stat-value">{{ total_categorias }}</div>
+      <div class="stat-label">Categorías</div>
+    </div>
+  </div>
+</div>
+
+<!-- Two columns -->
+<div class="dashboard-grid">
+
+  <!-- Últimos productos -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Últimos productos añadidos</h2>
+      <a href="{% url 'admin_panel:producto_lista' %}" class="card-link">Ver todos →</a>
+    </div>
+    <div class="card-body">
+      {% if ultimos_productos %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in ultimos_productos %}
+          <tr>
+            <td>
+              <a href="{% url 'admin_panel:producto_editar' p.pk %}" class="table-link">
+                {{ p.nombre }}
+              </a>
+            </td>
+            <td>{{ p.categoria.nombre|default:"—" }}</td>
+            <td class="num">${{ p.precio }}</td>
+            <td>
+              <span class="badge {% if p.stock > 0 %}badge--green{% else %}badge--gray{% endif %}">
+                {% if p.stock > 0 %}Disponible{% else %}Sin stock{% endif %}
+              </span>
+            </td>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="empty-state">No hay productos aún. <a href="{% url 'admin_panel:producto_crear' %}">Crear el primero →</a></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Categorías -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Productos por categoría</h2>
+      <a href="{% url 'admin_panel:categoria_lista' %}" class="card-link">Gestionar →</a>
+    </div>
+    <div class="card-body">
+      {% if por_categoria %}
+      <div class="cat-list">
+        {% for cat in por_categoria %}
+        <div class="cat-row">
+          <div class="cat-info">
+            <span class="cat-name">{{ cat.nombre }}</span>
+            <span class="cat-count">{{ cat.num_productos }} producto{% if cat.num_productos != 1 %}s{% endif %}</span>
+          </div>
+          <div class="cat-bar-wrap">
+            <div class="cat-bar" style="width: {% widthratio cat.num_productos total_productos 100 %}%"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="empty-state">Sin categorías. <a href="{% url 'admin_panel:categoria_crear' %}">Crear una →</a></p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+<!-- Quick actions -->
+<div class="quick-actions">
+  <a href="{% url 'admin_panel:producto_crear' %}" class="quick-btn quick-btn--primary">
+    <span class="quick-icon">+</span>
+    <span>Nuevo producto</span>
+  </a>
+  <a href="{% url 'admin_panel:categoria_crear' %}" class="quick-btn">
+    <span class="quick-icon">◫</span>
+    <span>Nueva categoría</span>
+  </a>
+  <a href="{% url 'admin_panel:producto_lista' %}" class="quick-btn">
+    <span class="quick-icon">▦</span>
+    <span>Ver catálogo</span>
+  </a>
+  <a href="/" class="quick-btn" target="_blank">
+    <span class="quick-icon">↗</span>
+    <span>Ver sitio</span>
+  </a>
+</div>
+{% endblock %}

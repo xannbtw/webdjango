@@ -1,0 +1,64 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block auth_content %}
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-logo">⬡</div>
+      <h1>Panel de Admin</h1>
+      <p>Acceso restringido a administradores</p>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" style="margin-bottom: 1.25rem;">
+      <span>{{ message }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="post" class="login-form">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="form-control"
+          placeholder="Tu usuario"
+          required
+          autofocus
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="••••••••"
+          required
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full">
+        Entrar al panel
+      </button>
+    </form>
+
+    <div class="login-back">
+      <a href="/">← Volver al sitio</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

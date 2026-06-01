@@ -49,6 +49,11 @@
                         {% if user.is_authenticated %}
                             <div class="d-flex align-items-center gap-2">
                                 <span class="text-muted small d-none d-md-block">Hola, {{ user.username }}</span>
+                                {% if user.is_staff or user.is_superuser %}
+                                <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-dark rounded-pill px-3">
+                                    Panel Admin
+                                </a>
+                                {% endif %}
                                 <form method="post" action="{% url 'logout' %}" style="margin: 0;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-dark rounded-pill px-4">Salir</button>
