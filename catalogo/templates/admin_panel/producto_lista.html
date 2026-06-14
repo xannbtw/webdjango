@@ -1,10 +1,10 @@
 {% extends 'admin_panel/base.html' %}
 
 {% block title %}Productos{% endblock %}
-{% block breadcrumb %} / <a href="{% url 'admin_panel:producto_lista' %}">Productos</a>{% endblock %}
+{% block breadcrumb %} / <a href="{% url 'admin_producto_lista' %}">Productos</a>{% endblock %}
 
 {% block topbar_actions %}
-<a href="{% url 'admin_panel:producto_crear' %}" class="btn btn-primary btn-sm">+ Nuevo producto</a>
+<a href="{% url 'admin_producto_crear' %}" class="btn btn-primary btn-sm">+ Nuevo producto</a>
 {% endblock %}
 
 {% block content %}
@@ -31,7 +31,7 @@
     </select>
     <button type="submit" class="btn btn-secondary">Filtrar</button>
     {% if query or cat_id %}
-    <a href="{% url 'admin_panel:producto_lista' %}" class="btn btn-ghost">Limpiar</a>
+    <a href="{% url 'admin_producto_lista' %}" class="btn btn-ghost">Limpiar</a>
     {% endif %}
   </form>
 </div>
@@ -90,7 +90,7 @@
             {% endif %}
           </td>
           <td>
-            <a href="{% url 'admin_panel:producto_editar' producto.pk %}" class="table-link">
+            <a href="{% url 'admin_producto_editar' producto.pk %}" class="table-link">
               {{ producto.nombre }}
             </a>
           </td>
@@ -99,8 +99,8 @@
           <td class="num">{{ producto.stock }}</td>
           <td class="col-actions">
             <div class="action-group">
-              <a href="{% url 'admin_panel:producto_editar' producto.pk %}" class="action-btn" title="Editar">✎</a>
-              <a href="{% url 'admin_panel:producto_eliminar' producto.pk %}" class="action-btn action-btn--danger" title="Eliminar">✕</a>
+              <a href="{% url 'admin_producto_editar' producto.pk %}" class="action-btn" title="Editar">✎</a>
+              <a href="{% url 'admin_producto_eliminar' producto.pk %}" class="action-btn action-btn--danger" title="Eliminar">✕</a>
             </div>
           </td>
         </tr>
@@ -127,7 +127,7 @@
     <div class="empty-icon">▦</div>
     <h2>Sin resultados</h2>
     <p>{% if query or cat_id %}Ningún producto coincide con los filtros.{% else %}Aún no hay productos en el catálogo.{% endif %}</p>
-    <a href="{% url 'admin_panel:producto_crear' %}" class="btn btn-primary">+ Crear primer producto</a>
+    <a href="{% url 'admin_producto_crear' %}" class="btn btn-primary">+ Crear primer producto</a>
   </div>
   {% endif %}
 </form>

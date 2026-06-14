@@ -48,7 +48,7 @@
   <div class="card">
     <div class="card-header">
       <h2 class="card-title">Últimos productos añadidos</h2>
-      <a href="{% url 'admin_panel:producto_lista' %}" class="card-link">Ver todos →</a>
+      <a href="{% url 'admin_producto_lista' %}" class="card-link">Ver todos →</a>
     </div>
     <div class="card-body">
       {% if ultimos_productos %}
@@ -64,7 +64,7 @@
           {% for p in ultimos_productos %}
           <tr>
             <td>
-              <a href="{% url 'admin_panel:producto_editar' p.pk %}" class="table-link">
+              <a href="{% url 'admin_producto_editar' p.pk %}" class="table-link">
                 {{ p.nombre }}
               </a>
             </td>
@@ -81,7 +81,7 @@
         </tbody>
       </table>
       {% else %}
-      <p class="empty-state">No hay productos aún. <a href="{% url 'admin_panel:producto_crear' %}">Crear el primero →</a></p>
+      <p class="empty-state">No hay productos aún. <a href="{% url 'admin_producto_crear' %}">Crear el primero →</a></p>
       {% endif %}
     </div>
   </div>
@@ -90,7 +90,7 @@
   <div class="card">
     <div class="card-header">
       <h2 class="card-title">Productos por categoría</h2>
-      <a href="{% url 'admin_panel:categoria_lista' %}" class="card-link">Gestionar →</a>
+      <a href="{% url 'admin_categoria_lista' %}" class="card-link">Gestionar →</a>
     </div>
     <div class="card-body">
       {% if por_categoria %}
@@ -108,7 +108,7 @@
         {% endfor %}
       </div>
       {% else %}
-      <p class="empty-state">Sin categorías. <a href="{% url 'admin_panel:categoria_crear' %}">Crear una →</a></p>
+      <p class="empty-state">Sin categorías. <a href="{% url 'admin_categoria_crear' %}">Crear una →</a></p>
       {% endif %}
     </div>
   </div>
@@ -117,15 +117,15 @@
 
 <!-- Quick actions -->
 <div class="quick-actions">
-  <a href="{% url 'admin_panel:producto_crear' %}" class="quick-btn quick-btn--primary">
+  <a href="{% url 'admin_producto_crear' %}" class="quick-btn quick-btn--primary">
     <span class="quick-icon">+</span>
     <span>Nuevo producto</span>
   </a>
-  <a href="{% url 'admin_panel:categoria_crear' %}" class="quick-btn">
+  <a href="{% url 'admin_categoria_crear' %}" class="quick-btn">
     <span class="quick-icon">◫</span>
     <span>Nueva categoría</span>
   </a>
-  <a href="{% url 'admin_panel:producto_lista' %}" class="quick-btn">
+  <a href="{% url 'admin_producto_lista' %}" class="quick-btn">
     <span class="quick-icon">▦</span>
     <span>Ver catálogo</span>
   </a>

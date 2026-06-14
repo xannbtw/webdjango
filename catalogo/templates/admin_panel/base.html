@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 {% load static %}
-<link rel="stylesheet" href="{% static 'admin_panel/css/admin.css' %}">
+<link rel="stylesheet" href="{% static 'catalogo/css/admin.css' %}">
 </head>
 <body>
 
@@ -25,34 +25,34 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a href="{% url 'admin_panel:dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <a href="{% url 'admin_dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
         <span class="nav-icon">◈</span>
         <span>Dashboard</span>
       </a>
 
       <div class="nav-section">Catálogo</div>
 
-      <a href="{% url 'admin_panel:producto_lista' %}" class="nav-item {% if 'producto' in request.resolver_match.url_name %}active{% endif %}">
+      <a href="{% url 'admin_producto_lista' %}" class="nav-item {% if 'producto' in request.resolver_match.url_name %}active{% endif %}">
         <span class="nav-icon">▦</span>
         <span>Productos</span>
       </a>
-      <a href="{% url 'admin_panel:producto_crear' %}" class="nav-item nav-sub">
+      <a href="{% url 'admin_producto_crear' %}" class="nav-item nav-sub">
         <span class="nav-icon">+</span>
         <span>Nuevo producto</span>
       </a>
 
-      <a href="{% url 'admin_panel:categoria_lista' %}" class="nav-item {% if 'categoria' in request.resolver_match.url_name %}active{% endif %}">
+      <a href="{% url 'admin_categoria_lista' %}" class="nav-item {% if 'categoria' in request.resolver_match.url_name %}active{% endif %}">
         <span class="nav-icon">◫</span>
         <span>Categorías</span>
       </a>
-      <a href="{% url 'admin_panel:categoria_crear' %}" class="nav-item nav-sub">
+      <a href="{% url 'admin_categoria_crear' %}" class="nav-item nav-sub">
         <span class="nav-icon">+</span>
         <span>Nueva categoría</span>
       </a>
 
       <div class="nav-section">Configuración</div>
 
-      <a href="{% url 'admin_panel:logout' %}" class="nav-item nav-logout">
+      <a href="{% url 'admin_logout' %}" class="nav-item nav-logout">
         <span class="nav-icon">→</span>
         <span>Cerrar sesión</span>
       </a>
@@ -77,7 +77,7 @@
     <header class="topbar">
       <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
       <div class="breadcrumb">
-        <a href="{% url 'admin_panel:dashboard' %}">Admin</a>
+        <a href="{% url 'admin_dashboard' %}">Admin</a>
         {% block breadcrumb %}{% endblock %}
       </div>
       <div class="topbar-actions">

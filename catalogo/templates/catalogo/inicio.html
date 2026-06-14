@@ -84,29 +84,33 @@
                         <input type="hidden" name="product_id" value="{{ producto.id }}">
                         <input type="hidden" name="next" value="{{ request.path }}">
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small text-uppercase"
-                                style="color: var(--muted-foreground);">Tamaño</label>
-                            <select class="form-select rounded-pill" name="tamano">
-                                <option value="" selected>Normal (Por defecto)</option>
-                                <option value="Pequeño">Pequeño</option>
-                                <option value="Mediano">Mediano</option>
-                                <option value="Grande">Grande</option>
-                            </select>
-                        </div>
+                        {% if producto.categoria.tiene_tamano %}
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small text-uppercase"
+                                    style="color: var(--muted-foreground);">Tamaño</label>
+                                <select class="form-select rounded-pill" name="tamano">
+                                    <option value="" selected>Normal (Por defecto)</option>
+                                    <option value="Pequeño">Pequeño</option>
+                                    <option value="Mediano">Mediano</option>
+                                    <option value="Grande">Grande</option>
+                                </select>
+                            </div>
+                        {% endif %}
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold small text-uppercase"
-                                style="color: var(--muted-foreground);">Tipo de Leche</label>
-                            <select class="form-select rounded-pill" name="tipo_leche">
-                                <option value="" selected>Normal (Por defecto)</option>
-                                <option value="Entera">Entera</option>
-                                <option value="Descremada">Descremada</option>
-                                <option value="Almendra">Almendra</option>
-                                <option value="Avena">Avena</option>
-                                <option value="Sin Leche">Sin Leche</option>
-                            </select>
-                        </div>
+                        {% if producto.categoria.tiene_tipo_leche %}
+                            <div class="mb-4">
+                                <label class="form-label fw-bold small text-uppercase"
+                                    style="color: var(--muted-foreground);">Tipo de Leche</label>
+                                <select class="form-select rounded-pill" name="tipo_leche">
+                                    <option value="" selected>Normal (Por defecto)</option>
+                                    <option value="Entera">Entera</option>
+                                    <option value="Descremada">Descremada</option>
+                                    <option value="Almendra">Almendra</option>
+                                    <option value="Avena">Avena</option>
+                                    <option value="Sin Leche">Sin Leche</option>
+                                </select>
+                            </div>
+                        {% endif %}
 
                         <button type="submit" class="btn btn-outline-dark rounded-pill w-100 shadow-sm py-2">Confirmar
                             Agregar</button>

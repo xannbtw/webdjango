@@ -2,7 +2,7 @@
  
 {% block title %}{{ titulo }}{% endblock %}
 {% block breadcrumb %}
- / <a href="{% url 'admin_panel:producto_lista' %}">Productos</a>
+ / <a href="{% url 'admin_producto_lista' %}">Productos</a>
  / {{ titulo }}
 {% endblock %}
  
@@ -91,7 +91,7 @@
         {% if not producto %}
         <button type="submit" name="guardar_y_nuevo" value="1" class="btn btn-secondary btn-full">Guardar y crear otro</button>
         {% endif %}
-        <a href="{% url 'admin_panel:producto_lista' %}" class="btn btn-ghost btn-full">Cancelar</a>
+        <a href="{% url 'admin_producto_lista' %}" class="btn btn-ghost btn-full">Cancelar</a>
       </div>
  
     </div>

@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary',
     'catalogo',
-    'admin_panel',
 ]
 
 

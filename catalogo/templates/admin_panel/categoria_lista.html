@@ -1,10 +1,10 @@
 {% extends 'admin_panel/base.html' %}
 
 {% block title %}Categorías{% endblock %}
-{% block breadcrumb %} / <a href="{% url 'admin_panel:categoria_lista' %}">Categorías</a>{% endblock %}
+{% block breadcrumb %} / <a href="{% url 'admin_categoria_lista' %}">Categorías</a>{% endblock %}
 
 {% block topbar_actions %}
-<a href="{% url 'admin_panel:categoria_crear' %}" class="btn btn-primary btn-sm">+ Nueva categoría</a>
+<a href="{% url 'admin_categoria_crear' %}" class="btn btn-primary btn-sm">+ Nueva categoría</a>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +16,7 @@
   <form method="get" class="filter-form">
     <input type="text" name="q" value="{{ query }}" placeholder="Buscar categoría…" class="form-control filter-search">
     <button type="submit" class="btn btn-secondary">Buscar</button>
-    {% if query %}<a href="{% url 'admin_panel:categoria_lista' %}" class="btn btn-ghost">Limpiar</a>{% endif %}
+    {% if query %}<a href="{% url 'admin_categoria_lista' %}" class="btn btn-ghost">Limpiar</a>{% endif %}
   </form>
 </div>
 
@@ -43,14 +43,14 @@
           {% endif %}
         </td>
         <td>
-          <a href="{% url 'admin_panel:categoria_editar' cat.pk %}" class="table-link">{{ cat.nombre }}</a>
+          <a href="{% url 'admin_categoria_editar' cat.pk %}" class="table-link">{{ cat.nombre }}</a>
         </td>
         <td class="text-muted">{{ cat.descripcion|default:"—"|truncatechars:60 }}</td>
         <td class="num">{{ cat.num_productos }}</td>
         <td class="col-actions">
           <div class="action-group">
-            <a href="{% url 'admin_panel:categoria_editar' cat.pk %}" class="action-btn" title="Editar">✎</a>
-            <a href="{% url 'admin_panel:categoria_eliminar' cat.pk %}" class="action-btn action-btn--danger" title="Eliminar">✕</a>
+            <a href="{% url 'admin_categoria_editar' cat.pk %}" class="action-btn" title="Editar">✎</a>
+            <a href="{% url 'admin_categoria_eliminar' cat.pk %}" class="action-btn action-btn--danger" title="Eliminar">✕</a>
           </div>
         </td>
       </tr>
@@ -76,7 +76,7 @@
   <div class="empty-icon">◫</div>
   <h2>Sin categorías</h2>
   <p>Crea la primera categoría para organizar tus productos.</p>
-  <a href="{% url 'admin_panel:categoria_crear' %}" class="btn btn-primary">+ Crear categoría</a>
+  <a href="{% url 'admin_categoria_crear' %}" class="btn btn-primary">+ Crear categoría</a>
 </div>
 {% endif %}
 {% endblock %}

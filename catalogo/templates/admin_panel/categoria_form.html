@@ -2,7 +2,7 @@
 
 {% block title %}{{ titulo }}{% endblock %}
 {% block breadcrumb %}
- / <a href="{% url 'admin_panel:categoria_lista' %}">Categorías</a>
+ / <a href="{% url 'admin_categoria_lista' %}">Categorías</a>
  / {{ titulo }}
 {% endblock %}
 
@@ -50,9 +50,30 @@
       </div>
     </div>
 
+    <div class="form-group" style="margin-top: 1rem;">
+          <label class="form-label">Opciones del producto</label>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
+
+            <div class="form-check-group">
+              {{ form.tiene_tamano }}
+              <label class="check-label" for="{{ form.tiene_tamano.id_for_label }}">
+                Permite seleccionar <strong>tamaño</strong> (Pequeño / Mediano / Grande)
+              </label>
+            </div>
+
+            <div class="form-check-group">
+              {{ form.tiene_tipo_leche }}
+              <label class="check-label" for="{{ form.tiene_tipo_leche.id_for_label }}">
+                Permite seleccionar <strong>tipo de leche</strong>
+              </label>
+            </div>
+
+          </div>
+        </div>
+
     <div class="form-actions" style="margin-top: 1rem;">
       <button type="submit" class="btn btn-primary">{{ accion }}</button>
-      <a href="{% url 'admin_panel:categoria_lista' %}" class="btn btn-ghost">Cancelar</a>
+      <a href="{% url 'admin_categoria_lista' %}" class="btn btn-ghost">Cancelar</a>
     </div>
 
   </form>
