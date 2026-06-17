@@ -56,6 +56,7 @@ class ItemPedido(models.Model):
     cantidad = models.IntegerField(default=1)
     tamano = models.CharField(max_length=20, choices=TAMANO_CHOICES, null=True, blank=True)
     tipo_leche = models.CharField(max_length=20, choices=TIPO_LECHE_CHOICES, null=True, blank=True)
+    precio_unitario = models.IntegerField(default=0)
 
     def __str__(self):
         opciones = []

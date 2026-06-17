@@ -2,15 +2,29 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from functools import wraps
 
-from .models import Categoria, Producto
+from .models import Categoria, Producto, Pedido, ItemPedido
 from .forms import ProductoForm, CategoriaForm
-import mercadopago
-from django.conf import settings
+
+
+# ──────────────────────────────
+#  Ajuste de precio por tamaño
+# ──────────────────────────────
+
+AJUSTE_TAMANO = {
+    'Pequeño': -200,
+    'Mediano': 0,
+    'Grande': 500,
+    '': 0,
+}
+
+def precio_con_tamano(precio_base, tamano):
+    return precio_base + AJUSTE_TAMANO.get(tamano, 0)
 
 
 # ──────────────────────────────
@@ -71,6 +85,9 @@ def agregar_carrito(request, producto_id):
         tamano = request.POST.get('tamano', '')
         tipo_leche = request.POST.get('tipo_leche', '')
 
+        # Precio final ya con ajuste de tamaño aplicado
+        precio_final = precio_con_tamano(producto.precio, tamano)
+
         id_str = f"{producto_id}_{tamano}_{tipo_leche}" if (tamano or tipo_leche) else str(producto_id)
 
         if id_str in carrito:
@@ -79,7 +96,8 @@ def agregar_carrito(request, producto_id):
             carrito[id_str] = {
                 'producto_id': producto_id,
                 'nombre': producto.nombre,
-                'precio': producto.precio,
+                'precio_base': producto.precio,
+                'precio': precio_final,
                 'cantidad': 1,
                 'tamano': tamano,
                 'tipo_leche': tipo_leche,
@@ -87,13 +105,15 @@ def agregar_carrito(request, producto_id):
             }
 
         request.session['carrito'] = carrito
-        messages.success(request, 'producto agregado.')
+        messages.success(request, 'Producto agregado correctamente.')
         next_url = request.POST.get('next', 'menu')
         return redirect(next_url)
     return redirect('inicio')
 
+
 def ver_carrito(request):
     carrito = request.session.get('carrito', {})
+
     total_carrito = 0
     carrito_list = []
 
@@ -106,7 +126,8 @@ def ver_carrito(request):
         carrito_list.append({
             'id': key,
             'nombre': item['nombre'],
-            'precio': item['precio'],
+            'precio_base': item.get('precio_base', item['precio']),
+            'precio': precio,
             'cantidad': cantidad,
             'subtotal': subtotal,
             'tamano': item.get('tamano', ''),
@@ -116,6 +137,7 @@ def ver_carrito(request):
 
     context = {'carrito_list': carrito_list, 'total_carrito': total_carrito}
     return render(request, 'catalogo/carrito.html', context)
+
 
 def eliminar_carrito(request, item_id):
     carrito = request.session.get('carrito', {})
@@ -132,44 +154,82 @@ def eliminar_carrito(request, item_id):
 # ──────────────────────────────
 
 def pago_views(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Debes iniciar sesión para proceder con la compra.')
+        return redirect('inicio')
+
     carrito = request.session.get('carrito', {})
     if not carrito:
         messages.warning(request, 'Tu carrito está vacío.')
         return redirect('ver_carrito')
 
-    sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
+    total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito.values())
 
-    items = []
+    if request.method == 'POST':
+        nombre_titular = request.POST.get('nombre_titular', '').strip()
+        numero_tarjeta = request.POST.get('numero_tarjeta', '').strip()
+        fecha_exp = request.POST.get('fecha_exp', '').strip()
+        cvv = request.POST.get('cvv', '').strip()
+
+        if not all([nombre_titular, numero_tarjeta, fecha_exp, cvv]):
+            messages.error(request, 'Por favor completa todos los campos.')
+            return render(request, 'catalogo/pago.html', {
+                'carrito_list': _build_carrito_list(carrito),
+                'total_carrito': total_carrito,
+            })
+
+        pedido = Pedido.objects.create(
+            cliente=request.user,
+            completado=True,
+        )
+
+        for key, item in carrito.items():
+            try:
+                producto = Producto.objects.get(id=item['producto_id'])
+                ItemPedido.objects.create(
+                    pedido=pedido,
+                    producto=producto,
+                    cantidad=item['cantidad'],
+                    tamano=item.get('tamano') or None,
+                    tipo_leche=item.get('tipo_leche') or None,
+                    precio_unitario=item['precio'],
+                )
+            except Producto.DoesNotExist:
+                pass
+
+        request.session['carrito'] = {}
+        request.session['ultimo_pedido_id'] = pedido.id
+
+        return redirect('pago_exitoso')
+
+    carrito_list = _build_carrito_list(carrito)
+    return render(request, 'catalogo/pago.html', {
+        'carrito_list': carrito_list,
+        'total_carrito': total_carrito,
+    })
+
+
+def _build_carrito_list(carrito):
+    result = []
     for key, item in carrito.items():
-        items.append({
-            "title": item['nombre'],
-            "quantity": int(item['cantidad']),
-            "unit_price": float(item['precio']),
-            "currency_id": "CLP",
+        subtotal = item['precio'] * item['cantidad']
+        result.append({
+            'id': key,
+            'nombre': item['nombre'],
+            'precio_base': item.get('precio_base', item['precio']),
+            'precio': item['precio'],
+            'cantidad': item['cantidad'],
+            'subtotal': subtotal,
+            'tamano': item.get('tamano', ''),
+            'tipo_leche': item.get('tipo_leche', ''),
+            'imagen': item.get('imagen', ''),
         })
+    return result
 
-    preference_data = {
-        "items": items,
-        "back_urls": {
-            "success": "https://www.google.com",
-            "failure": "https://www.google.com",
-            "pending": "https://www.google.com",
-        },
-    }
-
-    preference = sdk.preference().create(preference_data)
-
-    if "response" not in preference or "init_point" not in preference["response"]:
-        print("ERROR MP:", preference)
-        messages.error(request, 'Error al conectar con Mercado Pago.')
-        return redirect('ver_carrito')
-
-    return redirect(preference["response"]["init_point"])
 
 def pago_exitoso_views(request):
-    request.session['carrito'] = {}
-    messages.success(request, '¡Pago realizado con éxito! Gracias por tu compra.')
-    return render(request, 'catalogo/pagoexitoso.html')
+    pedido_id = request.session.pop('ultimo_pedido_id', None)
+    return render(request, 'catalogo/pagoexitoso.html', {'pedido_id': pedido_id})
 
 
 # ──────────────────────────────
@@ -228,6 +288,7 @@ def admin_logout(request):
 def dashboard(request):
     total_productos = Producto.objects.count()
     total_categorias = Categoria.objects.count()
+    total_pedidos = Pedido.objects.count()
 
     por_categoria = (
         Categoria.objects.annotate(num_productos=Count('productos'))
@@ -235,18 +296,64 @@ def dashboard(request):
     )
 
     ultimos_productos = Producto.objects.select_related('categoria').order_by('-id')[:5]
+    ultimos_pedidos = Pedido.objects.select_related('cliente').order_by('-fecha_pedido')[:5]
 
     context = {
         'total_productos': total_productos,
         'productos_activos': total_productos,
         'productos_inactivos': 0,
         'total_categorias': total_categorias,
+        'total_pedidos': total_pedidos,
         'valor_inventario': 0,
         'por_categoria': por_categoria,
         'ultimos_productos': ultimos_productos,
+        'ultimos_pedidos': ultimos_pedidos,
         'sin_stock': Producto.objects.filter(stock=0).count(),
     }
     return render(request, 'admin_panel/dashboard.html', context)
+
+
+# ──────────────────────────────
+#  Admin — Pedidos
+# ──────────────────────────────
+
+@admin_required
+def pedido_lista(request):
+    pedidos = Pedido.objects.select_related('cliente').prefetch_related(
+        'itempedido_set__producto'
+    ).order_by('-fecha_pedido')
+
+    paginator = Paginator(pedidos, 20)
+    page = request.GET.get('page', 1)
+    pedidos_page = paginator.get_page(page)
+
+    return render(request, 'admin_panel/pedido_lista.html', {'pedidos': pedidos_page})
+
+@admin_required
+def pedido_detalle(request, pk):
+    pedido = get_object_or_404(
+        Pedido.objects.select_related('cliente').prefetch_related('itempedido_set__producto'),
+        pk=pk
+    )
+    raw_items = pedido.itempedido_set.all()
+    items = []
+    total = 0
+    for i in raw_items:
+        subtotal = i.precio_unitario * i.cantidad
+        total += subtotal
+        items.append({
+            'producto': i.producto,
+            'tamano': i.tamano,
+            'tipo_leche': i.tipo_leche,
+            'cantidad': i.cantidad,
+            'precio_unitario': i.precio_unitario,
+            'subtotal': subtotal,
+        })
+    return render(request, 'admin_panel/pedido_detalle.html', {
+        'pedido': pedido,
+        'items': items,
+        'total': total,
+    })
 
 
 # ──────────────────────────────

@@ -1,22 +1,29 @@
 from django.contrib import admin
-from .models import Categoria, Producto, Pedido, DetallePedido
+from .models import Categoria, Producto, Pedido, ItemPedido
 
-admin.site.register(Categoria) # añade categoria al panel de admin
+admin.site.register(Categoria)
 
-class ProductoAdmin(admin.ModelAdmin): 
-    list_display = ('nombre', 'categoria', 'precio', 'stock') # columnas q se ven en producto
-    list_filter = ('categoria',) # agrega categoria al panel lateral
-    search_fields = ('nombre',) # agrega una busqueda por nombre
-    
-admin.site.register(Producto, ProductoAdmin) # agregar Producto con la clase ProductoAdmin al panel
+@admin.register(Producto)
+class ProductoAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'categoria', 'precio', 'stock')
+    list_filter = ('categoria',)
+    search_fields = ('nombre',)
 
-class detallePedido(admin.TabularInline): # para editar prod en la parte de pedido
-    model = DetallePedido
-    extra = 1 # espacio en blanco para nuevo producto al pedido
-    
-class pedidoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'cliente', 'fecha_pedido', 'completado') # columnas que se ven en pedidos
-    list_filter = ('completado', 'fecha_pedido') # filtros laterales de fecha y estado
-    inlines = [detallePedido] # se inserta detallePedido en la pantalla del pedido
 
-admin.site.register(Pedido, pedidoAdmin) # agregar Pedido y pedidoAdmin al panel
+class ItemPedidoInline(admin.TabularInline):
+    model = ItemPedido
+    extra = 0
+    readonly_fields = ('producto', 'cantidad', 'tamano', 'tipo_leche')
+    can_delete = False
+
+
+@admin.register(Pedido)
+class PedidoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'cliente', 'fecha_pedido', 'completado', 'num_items')
+    list_filter = ('completado', 'fecha_pedido')
+    readonly_fields = ('cliente', 'fecha_pedido')
+    inlines = [ItemPedidoInline]
+
+    def num_items(self, obj):
+        return obj.itempedido_set.count()
+    num_items.short_description = 'Items'

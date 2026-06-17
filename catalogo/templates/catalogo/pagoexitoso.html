@@ -1,21 +1,39 @@
 {% extends 'catalogo/base.html' %}
-    
+
 {% block content %}
+<section class="pago-exitoso-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="pago-exitoso-card text-center">
 
-    <div class="container d-flex justify-content-center align-items-center">
-        <div class="card text-center shadow p-4" style="max-width: 400px;">
-            <div class="card-body">
-                <div class="mb-4">
-                    <svg class="text-success" xmlns="http://w3.org" width="80" height="80" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                </svg>
-            </div>
-            <h3 class="card-title text-success">¡Pago Exitoso!</h3>
-            <p class="card-text text-muted">Gracias por tu compra. Hemos recibido tu pago correctamente. Recibirás un correo con los detalles.</p>
-            <a href="{% url 'inicio'%}" class="btn btn-primary w-100">Volver al inicio</a>
+          <div class="pago-exitoso-icon">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+
+          <h2 class="pago-exitoso-titulo font-playfair">¡Pedido confirmado!</h2>
+          <p class="pago-exitoso-texto">
+            Gracias por tu compra en Nomade Kafé. Tu pedido ha sido registrado y pronto estará listo.
+          </p>
+
+          {% if pedido_id %}
+          <div class="pago-exitoso-numero">
+            Pedido <strong>#{{ pedido_id }}</strong>
+          </div>
+          {% endif %}
+
+          <div class="d-flex flex-column gap-2 mt-4">
+            <a href="{% url 'menu' %}" class="btn pago-exitoso-btn-primary">
+              <i class="bi bi-cup-hot me-2"></i>Seguir comprando
+            </a>
+            <a href="{% url 'inicio' %}" class="btn pago-exitoso-btn-secondary">
+              Volver al inicio
+            </a>
+          </div>
+
         </div>
+      </div>
     </div>
-</div>
-
+  </div>
+</section>
 {% endblock content %}

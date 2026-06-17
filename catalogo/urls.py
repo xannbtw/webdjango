@@ -14,7 +14,7 @@ urlpatterns = [
     path('agregar/<int:producto_id>/', views.agregar_carrito, name='agregar_carrito'),
     path('carrito/', views.ver_carrito, name='ver_carrito'),
     path('eliminar_carrito/<str:item_id>/', views.eliminar_carrito, name='eliminar_carrito'),
-    path('pago.html/', views.pago_views, name='pago'),
+    path('pago/', views.pago_views, name='pago'),
     path('pagoexitoso/', views.pago_exitoso_views, name='pago_exitoso'),
 
     # ── Admin — Autenticación ─────────────────────────────
@@ -23,6 +23,10 @@ urlpatterns = [
 
     # ── Admin — Dashboard ─────────────────────────────────
     path('admin-panel/', views.dashboard, name='admin_dashboard'),
+
+    # ── Admin — Pedidos ───────────────────────────────────
+    path('admin-panel/pedidos/', views.pedido_lista, name='admin_pedido_lista'),
+    path('admin-panel/pedidos/<int:pk>/', views.pedido_detalle, name='admin_pedido_detalle'),
 
     # ── Admin — Productos ─────────────────────────────────
     path('admin-panel/productos/', views.producto_lista, name='admin_producto_lista'),

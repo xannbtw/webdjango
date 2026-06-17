@@ -32,9 +32,11 @@
                     <div class="mt-auto">
                         <h5 class="fw-bold mb-3" style="color: var(--primary);">${{ producto.precio }}</h5>
 
-                        <button class="btn btn-outline-dark rounded-pill w-100" type="button" data-bs-toggle="offcanvas"
+                        <button class="btn btn-outline-dark rounded-pill w-100" type="button"
+                            data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasProducto{{producto.id}}"
-                            aria-controls="offcanvasProducto{{producto.id}}">
+                            aria-controls="offcanvasProducto{{producto.id}}"
+                            {% if producto.categoria.tiene_tamano %}onclick="setTimeout(()=>actualizarBoton({{producto.id}},{{producto.precio}}),50)"{% endif %}>
                             Agregar al Carrito
                         </button>
 
@@ -60,7 +62,7 @@
                 <p class="text-muted small">{{ producto.descripcion }}</p>
                 <h4 class="fw-bold mb-4" style="color: var(--primary);">${{ producto.precio }}</h4>
 
-                <form action="{% url 'agregar_carrito' producto.id %}" method="POST" class="">
+                <form action="{% url 'agregar_carrito' producto.id %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="product_id" value="{{ producto.id }}">
                     <input type="hidden" name="next" value="{{ request.path }}">
@@ -69,24 +71,25 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold small text-uppercase"
                                 style="color: var(--muted-foreground);">Tamaño</label>
-                            <select class="form-select rounded-pill" name="tamano">
-                                <option value="" selected>Normal (Por defecto)</option>
-                                <option value="Pequeño">Pequeño</option>
-                                <option value="Mediano">Mediano</option>
-                                <option value="Grande">Grande</option>
+                            <select class="form-select rounded-pill" name="tamano"
+                                id="tamanoSelect{{producto.id}}"
+                                onchange="actualizarBoton({{producto.id}}, {{producto.precio}})">
+                                <option value="Pequeño" data-diff="-200">Pequeño</option>
+                                <option value="Mediano" data-diff="0" selected>Mediano (Por defecto)</option>
+                                <option value="Grande" data-diff="500">Grande</option>
                             </select>
                         </div>
                     {% endif %}
-
 
                     {% if producto.categoria.tiene_tipo_leche %}
                         <div class="mb-4">
                             <label class="form-label fw-bold small text-uppercase"
                                 style="color: var(--muted-foreground);">Tipo de Leche</label>
                             <select class="form-select rounded-pill" name="tipo_leche">
-                                <option value="" selected>Normal (Por defecto)</option>
-                                <option value="Entera">Entera</option>
+                                <option value="Entera" selected>Entera (Por defecto)</option>
+                                <option value="Descremada">Semidescremada</option>                              
                                 <option value="Descremada">Descremada</option>
+                                <option value="Avena">Sin lactosa (descremada)</option>
                                 <option value="Almendra">Almendra</option>
                                 <option value="Avena">Avena</option>
                                 <option value="Sin Leche">Sin Leche</option>
@@ -94,9 +97,13 @@
                         </div>
                     {% endif %}
 
-                    <button type="submit" class="btn btn-outline-dark rounded-pill w-100 shadow-sm py-2">Confirmar
-                        Agregar</button>
+                    <button type="submit"
+                        id="btnAgregar{{producto.id}}"
+                        class="btn btn-outline-dark rounded-pill w-100 shadow-sm py-2">
+                        Confirmar Agregar · ${{ producto.precio }}
+                    </button>
                 </form>
+
             </div>
         </div>
         {% empty %}
@@ -109,4 +116,24 @@
 
     </div>
 </div>
+
+<!-- Script global fuera del loop para que esté disponible desde cualquier botón -->
+<script>
+function actualizarBoton(id, precioBase) {
+    const select = document.getElementById('tamanoSelect' + id);
+    const btn = document.getElementById('btnAgregar' + id);
+    if (!select || !btn) return;
+    const diff = parseInt(select.options[select.selectedIndex].dataset.diff);
+    const precioFinal = precioBase + diff;
+
+    if (diff > 0) {
+        btn.textContent = 'Confirmar Agregar · $' + precioFinal.toLocaleString('es-CL') + ' (+$' + diff + ')';
+    } else if (diff < 0) {
+        btn.textContent = 'Confirmar Agregar · $' + precioFinal.toLocaleString('es-CL') + ' (-$' + Math.abs(diff) + ')';
+    } else {
+        btn.textContent = 'Confirmar Agregar · $' + precioFinal.toLocaleString('es-CL');
+    }
+}
+</script>
+
 {% endblock content %}

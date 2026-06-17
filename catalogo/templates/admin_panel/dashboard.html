@@ -39,6 +39,13 @@
       <div class="stat-label">Categorías</div>
     </div>
   </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon--blue">◉</div>
+    <div class="stat-body">
+      <div class="stat-value">{{ total_pedidos }}</div>
+      <div class="stat-label">Pedidos</div>
+    </div>
+  </div>
 </div>
 
 <!-- Two columns -->
@@ -125,13 +132,51 @@
     <span class="quick-icon">◫</span>
     <span>Nueva categoría</span>
   </a>
-  <a href="{% url 'admin_producto_lista' %}" class="quick-btn">
-    <span class="quick-icon">▦</span>
-    <span>Ver catálogo</span>
+  <a href="{% url 'admin_pedido_lista' %}" class="quick-btn">
+    <span class="quick-icon">◉</span>
+    <span>Ver pedidos</span>
   </a>
   <a href="/" class="quick-btn" target="_blank">
     <span class="quick-icon">↗</span>
     <span>Ver sitio</span>
   </a>
 </div>
+
+<!-- Últimos pedidos -->
+{% if ultimos_pedidos %}
+<div class="data-table-card mt-4">
+  <div class="data-table-header">
+    <span>Últimos pedidos</span>
+    <a href="{% url 'admin_pedido_lista' %}" class="ver-todo">Ver todos →</a>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in ultimos_pedidos %}
+      <tr>
+        <td><strong>#{{ pedido.id }}</strong></td>
+        <td>{% if pedido.cliente %}{{ pedido.cliente.username }}{% else %}<em>Invitado</em>{% endif %}</td>
+        <td>{{ pedido.fecha_pedido|date:"d/m/Y H:i" }}</td>
+        <td>
+          {% if pedido.completado %}
+            <span class="badge bg-success" style="font-size:0.75rem;">Completado</span>
+          {% else %}
+            <span class="badge bg-warning text-dark" style="font-size:0.75rem;">Pendiente</span>
+          {% endif %}
+        </td>
+        <td><a href="{% url 'admin_pedido_detalle' pedido.pk %}" style="font-size:0.8rem;">Ver</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
 {% endblock %}

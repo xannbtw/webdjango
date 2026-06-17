@@ -1,45 +1,115 @@
-{% extends 'catalogo/base.html'%}
+{% extends 'catalogo/base.html' %}
 
 {% block content %}
-<section class="gradient-custom">
-  <div class="container my-5 py-5">
-    <div class="row d-flex justify-content-center py-5">
-      <div class="col-md-7 col-lg-5 col-xl-4">
-        <div class="card" style="border-radius: 15px;">
-          <div class="card-body p-4">
-            <form>
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <div data-mdb-input-init class="form-outline">
-                  <input type="text" id="typeText" class="form-control form-control-lg" placeholder="1234 5678 9012 3457" minlength="19" maxlength="19" />
-                  <label class="form-label" for="typeText">Numero de tarjeta</label>
-                </div>
-                <img src="https://img.icons8.com/color/48/000000/visa.png" width="50px" />
-              </div>
+<section class="pago-section py-5">
+  <div class="container">
+    <div class="row justify-content-center g-4">
 
-              <div class="d-flex justify-content-between align-items-center mb-4">
-                <div data-mdb-input-init class="form-outline">
-                  <input type="text" id="typeName" class="form-control form-control-lg" siez="17" placeholder="Cardholder's Name" />
-                  <label class="form-label" for="typeName">Titular de la tarjeta</label>
-                </div>
-              </div>
-
-              <div class="d-flex justify-content-between align-items-center pb-2">
-                <div data-mdb-input-init class="form-outline">
-                  <input type="text" class="form-control form-control-lg" placeholder="MM/YYYY" size="7" minlength="7" maxlength="7"/>
-                  <label class="form-label">Fecha expiracion</label>
-                </div>
-                <div data-mdb-input-init class="form-outline">
-                  <input type="password" id="typeText2" class="form-control form-control-lg"
-                    placeholder="***" size="1" minlength="3" maxlength="3" />
-                  <label class="form-label" for="typeText2">CVV</label>
-                </div>
-                <a href="{% url 'pago_exitoso' %}" class="btn btn-info btn-lg btn-rounded">Comprar</a>
-              </div>
-            </form>
+      <!-- Resumen del pedido -->
+      <div class="col-lg-5">
+        <div class="pago-card">
+          <h5 class="pago-card-title font-playfair">
+            <i class="bi bi-receipt me-2"></i>Resumen del pedido
+          </h5>
+          <div class="pago-items">
+            {% for item in carrito_list %}
+            <div class="pago-item-row">
+              <span class="pago-item-nombre">{{ item.nombre }}
+                {% if item.tamano %}<small class="text-muted"> · {{ item.tamano }}</small>{% endif %}
+                {% if item.tipo_leche %}<small class="text-muted"> · {{ item.tipo_leche }}</small>{% endif %}
+                <span class="pago-item-cantidad"> ×{{ item.cantidad }}</span>
+              </span>
+              <span class="pago-item-precio">${{ item.subtotal }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          <div class="pago-total-row">
+            <span>Total</span>
+            <strong>${{ total_carrito }}</strong>
           </div>
         </div>
       </div>
+
+      <!-- Formulario de pago -->
+      <div class="col-lg-5">
+        <div class="pago-card">
+          <h5 class="pago-card-title font-playfair">
+            <i class="bi bi-credit-card me-2"></i>Datos de pago
+          </h5>
+
+          {% if messages %}
+            {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} py-2 small">{{ msg }}</div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="POST" action="{% url 'pago' %}">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label pago-label">Número de tarjeta</label>
+              <div class="pago-input-group">
+                <input
+                  type="text"
+                  name="numero_tarjeta"
+                  class="form-control pago-input"
+                  placeholder="1234 5678 9012 3456"
+                  maxlength="19"
+                  required
+                >
+                <i class="bi bi-credit-card-2-front pago-input-icon"></i>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label pago-label">Nombre del titular</label>
+              <input
+                type="text"
+                name="nombre_titular"
+                class="form-control pago-input"
+                placeholder="Como aparece en la tarjeta"
+                required
+              >
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-7">
+                <label class="form-label pago-label">Fecha de vencimiento</label>
+                <input
+                  type="text"
+                  name="fecha_exp"
+                  class="form-control pago-input"
+                  placeholder="MM/AAAA"
+                  maxlength="7"
+                  required
+                >
+              </div>
+              <div class="col-5">
+                <label class="form-label pago-label">CVV</label>
+                <input
+                  type="password"
+                  name="cvv"
+                  class="form-control pago-input"
+                  placeholder="***"
+                  maxlength="4"
+                  required
+                >
+              </div>
+            </div>
+
+            <button type="submit" class="btn pago-btn-confirmar w-100">
+              <i class="bi bi-lock-fill me-2"></i>Confirmar pago · ${{ total_carrito }}
+            </button>
+          </form>
+
+          <p class="pago-seguro-text mt-3">
+            <i class="bi bi-shield-check me-1"></i>
+            Pago simulado — no se procesarán datos reales
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
-{% endblock content%}
+{% endblock content %}
