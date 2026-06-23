@@ -8,6 +8,8 @@ from catalogo.views import registro
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('catalogo.urls')),
+    path('carrito/', include('carrito.urls')),
+    path('panel/', include('backoffice.urls')),
 ]
 
 urlpatterns += [

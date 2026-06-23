@@ -26,7 +26,9 @@
                 {% if item.imagen %}
                 <img src="{{ item.imagen }}" alt="{{ item.nombre }}" class="carrito-item-img">
                 {% endif %}
-                <div class="carrito-item-nombre">{{ item.nombre }}</div>
+                <div class="carrito-item-nombre">
+                  {{ item.nombre }}
+                </div>
                 </div>
             <div class="carrito-item-precio">${{ item.precio }} × {{ item.cantidad }}</div>
           </div>
