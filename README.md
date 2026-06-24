@@ -3,11 +3,6 @@
 > **Tu refugio de especialidad en el corazón de Chiguayante.**  
 > Plataforma web de cafetería desarrollada con Django — catálogo, carrito de compras y panel de administración.
 
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
-[![Django](https://img.shields.io/badge/Django-5.2-092E20?style=flat&logo=django&logoColor=white)](https://www.djangoproject.com/)
-[![Deployed on Render](https://img.shields.io/badge/Deployed%20on-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://cafeteria-44wk.onrender.com)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
 ---
 
 ## 🌐 Demo en vivo
@@ -162,9 +157,6 @@ CLOUDINARY_API_SECRET=tu_api_secret
 DEBUG=False
 ALLOWED_HOSTS=cafeteria-44wk.onrender.com,localhost,127.0.0.1
 ```
-
-> ⚠️ Nunca subas el archivo `.env` al repositorio. Está incluido en `.gitignore`.
-
 ---
 
 ## 💻 Uso
@@ -203,33 +195,10 @@ python manage.py migrate
 - **Start Command:** `gunicorn web.wsgi:application`
 - **Variables de entorno:** configurar en el dashboard de Render
 
----
-
-## 📸 Capturas de pantalla
-
-| Vista | Descripción |
-|-------|-------------|
-| Inicio | Hero con productos destacados y carrito interactivo |
-| Menú | Categorías con imagen representativa |
-| Producto | Modal de personalización de tamaño y leche |
-| Admin | Backoffice de Django para gestión de contenido |
-
----
-
 ## 👥 Autores
 
-Desarrollado por el equipo **sixseven** como proyecto académico en la UTFSM Sede Concepción.
+Desarrollado por Yohel Faundez, Tomas Inostroza, Benjamin Duran.
 
 - [@xannbtw](https://github.com/xannbtw)
 
 ---
-
-## 📄 Licencia
-
-Este proyecto es de uso académico. Para cualquier otro uso, contactar a los autores.
-
----
-
-<p align="center">
-  Hecho con ☕ en Chiguayante · powered by colocolo
-</p>
