@@ -200,5 +200,5 @@ python manage.py migrate
 Desarrollado por Yohel Faundez, Tomas Inostroza, Benjamin Duran.
 
 - [@xannbtw](https://github.com/xannbtw)
-
+- [@some6odyy](https://github.com/some6odyy)
 ---
